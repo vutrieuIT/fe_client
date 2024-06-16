@@ -92,7 +92,7 @@ function FormRegister() {
     if(success && !unSuccess){
       setLoading(true);
       if(dataUser){
-        sessionStorage.setItem('userInfo', JSON.stringify(dataUser));
+        sessionStorage.setItem('userInfo', JSON.stringify([dataUser]));
       }
       sessionStorage.setItem('hasLogin',true);
       setTimeout(()=> window.location.href = '/',1500);
