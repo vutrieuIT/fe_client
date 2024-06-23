@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import API_URL from "../../src/config/Api";
 import URL_PATH from "../config/UrlPath";
 import Loading from "./Loading";
-import { useGoogleLogin, GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 
 function FormLogin() {
   const [validated, setValidated] = useState(false);
@@ -83,6 +83,19 @@ function FormLogin() {
   //     console.log("fail", response);
   //   },
   // });
+
+  const verifyGGToken = async (token) => {
+    
+    await axios.post(API_URL.concat("/login-google"), token)
+    .then((response) => {
+      setDataUser(response.data);
+      setSuccess(true);
+    })
+    .catch((error) => {
+      console.log("verify token fail", error);
+      setUnSuccess(true);
+    });
+  }
 
   // const handleLoginGoogle = () => {
   //   sessionStorage.setItem('userInfo',JSON.stringify([{
@@ -320,11 +333,10 @@ function FormLogin() {
       <Row className="mb-3">
         <Col className="d-flex justify-content-center">
           <GoogleLogin
-            onSuccess={(response) => {
-              console.log(response);
-            }}
+            onSuccess={(response) => {console.log(response);
+              verifyGGToken(response.credential);}}
             onFailure={(response) => {
-              console.log(response);
+              console.log("gg login fail", response);
             }}
           >
             <button>Login with Google</button>
