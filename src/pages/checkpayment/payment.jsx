@@ -1,8 +1,4 @@
-import axios from "axios";
-import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import API_URL from "../../config/Api";
- 
+import { Link } from "react-router-dom";
 
 function CheckPayment() {
   const fontSize = {
@@ -15,35 +11,10 @@ function CheckPayment() {
     },
   };
   const queryParameters = new URLSearchParams(window.location.search)
+
+  console.log(window.location.search);
   
   let vnp_ResponseCode =  queryParameters.get('vnp_ResponseCode')
-  let vnp_TxnRef =  queryParameters.get('vnp_TxnRef')
-  useEffect(() => {
-    // Kiểm tra xem mã phản hồi của VNPay có phải là 00 không (thanh toán thành công)
-    if (vnp_ResponseCode === '00') {
-      // Gọi API để cập nhật trạng thái của đơn hàng thành 'paid'
-      axios.post(`${API_URL}/checkpayment`, { status: 'paid', orderId: vnp_TxnRef })
-        .then(response => {
-          // Xử lý phản hồi từ API nếu cần
-          console.log('Payment status updated successfully:', response.data);
-        })
-        .catch(error => {
-          // Xử lý lỗi nếu có
-          console.error('Error updating payment status:', error);
-        });
-    }else {
-        axios.post(`${API_URL}/checkpayment`, { status: 'unpaid', orderId: vnp_TxnRef })
-        .then(response => {
-          // Xử lý phản hồi từ API nếu cần
-          console.log('Payment status updated successfully:', response.data);
-        })
-        .catch(error => {
-          // Xử lý lỗi nếu có
-          console.error('Error updating payment status:', error);
-        }); 
-    }
-  }, [vnp_TxnRef, vnp_ResponseCode]); // useEffect sẽ chạy lại khi các giá trị vnp_TxnRef hoặc vnp_ResponseCode thay đổi
-
 
   // Kiểm tra vnp_ResponseCode để xác định trạng thái thanh toán
   const paymentSuccess = vnp_ResponseCode == '00';
