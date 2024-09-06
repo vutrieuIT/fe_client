@@ -96,28 +96,28 @@ function Home(){
         if (!hotProducts.length) {
             getHotProducts();
         }
-        const data = [
-            {id:1,name:'Điện thoại'},
-            {id:2,name:'Máy tính'},
-            {id:3,name:'Đồng hồ'},
-            {id:4,name:'Tai nghe không dây'},
-            {id:9,name:'Tai nghe có dây'},
-            {id:5,name:'Ốp lưng'},
-            {id:6,name:'Kính VR'},
-            {id:7,name:'Loa không dây'},
-            {id:8,name:'Loa có dây'},
-            {id:10,name:'Sạc dự phòng'},
-        ];    
-        const dataProducts = [
-            {id:1,name:'Điện thoại',img:'iphone-14-pro_2__5.jpg',status:'Sale',price:'1500',price_sale:'',type:'iPhone 15 pro max'},
-            {id:2,name:'Apple watch 6', img:'Apple_Watch_black.jpg',status:'Mới',price:'600',price_sale:'',type:'Apple watch'},
-            {id:3,name:'Apple watch 7',img:'Apple_Watch_Series_7.jpg',status:'Hết hàng',price:'800',price_sale:'',type:'Apple watch'},
-            {id:4,name:'Apple watch black',img:'Apple_Watch_black.jpg',status:'Bán chạy',price:'400',price_sale:'',type:'Apple watch '},
-            {id:5,name:'iPhone 14',img:'iphone-14-plus.jpg',status:'',price:'1000',price_sale:'',type:'iPhone'},
-            {id:6,name:'iPhone 14 pro',img:'iphone-14-pro_2__5.jpg',status:'',price:'1200',price_sale:'',type:'iPhone'},
-            {id:7,name:'iPhone 13',img:'iphone-13.jpg',status:'',price:'2600',price_sale:'',type:'iPhone'},
-            {id:8,name:'iPhone 15 pro max',img:'iphone-15-pro-max_1.jpg',status:'',price:'4600',price_sale:'',type:'iPhone'},
-        ];    
+        // const data = [
+        //     {id:1,name:'Điện thoại'},
+        //     {id:2,name:'Máy tính'},
+        //     {id:3,name:'Đồng hồ'},
+        //     {id:4,name:'Tai nghe không dây'},
+        //     {id:9,name:'Tai nghe có dây'},
+        //     {id:5,name:'Ốp lưng'},
+        //     {id:6,name:'Kính VR'},
+        //     {id:7,name:'Loa không dây'},
+        //     {id:8,name:'Loa có dây'},
+        //     {id:10,name:'Sạc dự phòng'},
+        // ];    
+        // const dataProducts = [
+        //     {id:1,name:'Điện thoại',img:'iphone-14-pro_2__5.jpg',status:'Sale',price:'1500',price_sale:'',type:'iPhone 15 pro max'},
+        //     {id:2,name:'Apple watch 6', img:'Apple_Watch_black.jpg',status:'Mới',price:'600',price_sale:'',type:'Apple watch'},
+        //     {id:3,name:'Apple watch 7',img:'Apple_Watch_Series_7.jpg',status:'Hết hàng',price:'800',price_sale:'',type:'Apple watch'},
+        //     {id:4,name:'Apple watch black',img:'Apple_Watch_black.jpg',status:'Bán chạy',price:'400',price_sale:'',type:'Apple watch '},
+        //     {id:5,name:'iPhone 14',img:'iphone-14-plus.jpg',status:'',price:'1000',price_sale:'',type:'iPhone'},
+        //     {id:6,name:'iPhone 14 pro',img:'iphone-14-pro_2__5.jpg',status:'',price:'1200',price_sale:'',type:'iPhone'},
+        //     {id:7,name:'iPhone 13',img:'iphone-13.jpg',status:'',price:'2600',price_sale:'',type:'iPhone'},
+        //     {id:8,name:'iPhone 15 pro max',img:'iphone-15-pro-max_1.jpg',status:'',price:'4600',price_sale:'',type:'iPhone'},
+        // ];    
         
       
     },[categories,products]);    
@@ -138,6 +138,7 @@ function Home(){
     // const globalstate = useSelector(state=>state.cartState);
     const {add} = cartSlice.actions;
     const product_newProducts = newProducts.map(product=>{
+        if (product.variations.length === 0) return;
         return(
             <div key={product.id} className="col-xl-3 col-lg-4 col-sm-6">
                 <div className={`product text-start bg-light mb-3 ${styles.borderProduct} ${styles.paddingImageProduct}`}>
@@ -166,6 +167,7 @@ function Home(){
     }
     );
     const product_bestsellingProducts = bestsellingProducts.map(product=>{
+        if (product.variations.length === 0) return;
         return(
             <div key={product.id} className="col-xl-3 col-lg-4 col-sm-6">
                 <div className={`product text-start bg-light mb-3 ${styles.borderProduct} ${styles.paddingImageProduct}`}>
@@ -194,6 +196,7 @@ function Home(){
     }
     );
     const product_hotProducts = hotProducts.map(product=>{
+        if (product.variations.length === 0) return;
         return(
             <div key={product.id} className="col-xl-3 col-lg-4 col-sm-6">
                 <div className={`product text-start bg-light mb-3 ${styles.borderProduct} ${styles.paddingImageProduct}`}>

@@ -12,7 +12,7 @@ const DetailProduct = () => {
     const { id } = useParams();
     const navigate = useNavigate()
     //user data 
-  const userInfos = sessionStorage.getItem("userInfo");
+    const userInfos = sessionStorage.getItem("userInfo");
 
     const auth_user =     JSON.parse(userInfos);
     // const type = useParams()['type'];
@@ -30,6 +30,8 @@ const DetailProduct = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     // add to cart
     const [quantity, setQuantity] = useState(0);
+    // recommend product
+    const [recommendProducts, setRecommendProducts] = useState([]);
     
     const handleColorClick = (colorType, variant ) => {
         setSelectedColor(colorType);
@@ -99,6 +101,15 @@ const DetailProduct = () => {
         setMinPrice(min);
         setMaxPrice(max);
     }, [productDetail]);
+
+    const getRecommnedProduct = async () => {
+        await axios.get(`${API_URL}/recommend?userId=${userInfos[0].id}&productId=${id}`)
+        .then(response => {
+            setRecommendProducts(response.data);
+        })
+        .catch(error => 
+            console.error('Error fetching recommended products:', error));
+    }
     
     useEffect(()=>{
         if (!productDetail.length) {
@@ -108,6 +119,7 @@ const DetailProduct = () => {
         if(cachedProducts){
             setProducts(cachedProducts);
         }
+        getRecommnedProduct();
     },[]);   
     
 
@@ -308,6 +320,14 @@ const DetailProduct = () => {
                     </div>
                     </div>
                 </div>
+
+                <h1>SẢN PHẨM GỢI Ý</h1>
+                {recommendProducts.slice(0,3).map((product, index) => (
+                    <p key={index}>
+                        {product.name}
+                    </p>
+                ))
+                }
             </div>
         </section>
     );
