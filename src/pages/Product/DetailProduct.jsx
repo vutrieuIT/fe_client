@@ -32,6 +32,7 @@ const DetailProduct = () => {
   const [quantity, setQuantity] = useState(0);
   // recommend product
   const [recommendProducts, setRecommendProducts] = useState([]);
+  const [productSpecification, setProductSpecification] = useState([]);
 
   const handleColorClick = (colorType, variant) => {
     setSelectedColor(colorType);
@@ -43,6 +44,23 @@ const DetailProduct = () => {
       const response = await axios.get(`${API_URL}/san-pham/${id}`);
       const data = response.data;
       setProductDetail(data);
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+  // lấy thông số kỹ thuật sản phẩm
+  const getSpecification = async (id) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/san-pham/specification/${id}`
+      );
+      const data = response.data;
+      const specification = Object.entries(data).map(([key, value]) => ({
+        name: key,
+        value: value,
+      }));
+      setProductSpecification(specification);
     } catch (error) {
       console.log(error);
       return null;
@@ -123,6 +141,7 @@ const DetailProduct = () => {
   useEffect(() => {
     if (!productDetail.length) {
       getDetail(id);
+      getSpecification(id);
     }
     // const cachedProducts = JSON.parse(sessionStorage.getItem("products"));
     // if (cachedProducts) {
@@ -198,6 +217,40 @@ const DetailProduct = () => {
                 <p className="mb-4">
                   <strong>Description:</strong> {productDetail.description}
                 </p>
+                <h3 className="text-lg font-semibold mb-2">Specifications:</h3>
+                <ul className="list-unstyled mb-4">
+                  {productSpecification.map((spec, index) => {
+                    const listFieldUnwanted = [
+                      "cellphoneId",
+                      "brand",
+                      "model",
+                      "price",
+                    ];
+                    const listFieldUnitGB = ["internalMemory", "ram"];
+                    const listFieldUnitInch = ["screenSize"];
+                    const listFieldUnitMP = ["mainCamera", "selfieCamera"];
+                    const listFieldUnitmAh = ["batteryCapacity"];
+                    const listFieldUnitGram = ["weight"];
+                    const unit = listFieldUnitGB.includes(spec.name)
+                      ? "GB"
+                      : listFieldUnitInch.includes(spec.name)
+                      ? "inch"
+                      : listFieldUnitMP.includes(spec.name)
+                      ? "MP"
+                      : listFieldUnitmAh.includes(spec.name)
+                      ? "mAh"
+                      : listFieldUnitGram.includes(spec.name)
+                      ? "gram"
+                      : "";
+                    return (
+                      !listFieldUnwanted.includes(spec.name) && (
+                        <li key={index}>
+                          <strong>{spec.name}:</strong> {spec.value} {unit}
+                        </li>
+                      )
+                    );
+                  })}
+                </ul>
                 <h3 className="text-lg font-semibold mb-2">Variations:</h3>
                 <div className="variation-buttons mb-4">
                   {productDetail.variations.map((variation) => (
@@ -541,53 +594,68 @@ const DetailProduct = () => {
 
         <h1>SẢN PHẨM GỢI Ý</h1>
         <div className="row">
-          {recommendProducts.filter(p => p.variations.length != 0).slice(0, 3).map((product, index) => {
-            return (
-              <div className="col-lg-3 col-sm-6" style={{minHeight:"50px"}} key={index}>
-                <div className="product text-center skel-loader">
-                  <div className="d-block mb-3 position-relative">
-                    <Link className="d-block" to={`/lazi-store/cua-hang/${product.product_id}`}>
-                      <img
-                        className="img-fluid w-100"
-                        src={product.variations[0].image_url}
-                        alt="..."
-                      />
-                    </Link>
-                    <div className="product-overlay">
-                      <ul className="mb-0 list-inline">
-                        <li className="list-inline-item m-0 p-0">
-                          <a className="btn btn-sm btn-outline-dark" href="#!">
-                            <i className="far fa-heart"></i>
-                          </a>
-                        </li>
-                        <li className="list-inline-item m-0 p-0">
-                          <a className="btn btn-sm btn-dark" href="#!">
-                            Add to cart
-                          </a>
-                        </li>
-                        <li className="list-inline-item mr-0">
-                          <a
-                            className="btn btn-sm btn-outline-dark"
-                            href="#productView"
-                            data-bs-toggle="modal"
-                          >
-                            <i className="fas fa-expand"></i>
-                          </a>
-                        </li>
-                      </ul>
+          {recommendProducts
+            .filter((p) => p.variations.length != 0)
+            .slice(0, 3)
+            .map((product, index) => {
+              return (
+                <div
+                  className="col-lg-3 col-sm-6"
+                  style={{ minHeight: "50px" }}
+                  key={index}
+                >
+                  <div className="product text-center skel-loader">
+                    <div className="d-block mb-3 position-relative">
+                      <Link
+                        className="d-block"
+                        to={`/lazi-store/cua-hang/${product.product_id}`}
+                      >
+                        <img
+                          className="img-fluid w-100"
+                          src={product.variations[0].image_url}
+                          alt="..."
+                        />
+                      </Link>
+                      <div className="product-overlay">
+                        <ul className="mb-0 list-inline">
+                          <li className="list-inline-item m-0 p-0">
+                            <a
+                              className="btn btn-sm btn-outline-dark"
+                              href="#!"
+                            >
+                              <i className="far fa-heart"></i>
+                            </a>
+                          </li>
+                          <li className="list-inline-item m-0 p-0">
+                            <a className="btn btn-sm btn-dark" href="#!">
+                              Add to cart
+                            </a>
+                          </li>
+                          <li className="list-inline-item mr-0">
+                            <a
+                              className="btn btn-sm btn-outline-dark"
+                              href="#productView"
+                              data-bs-toggle="modal"
+                            >
+                              <i className="fas fa-expand"></i>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
+                    <h6>
+                      {" "}
+                      <a className="reset-anchor" href="detail.html">
+                        {product.name}
+                      </a>
+                    </h6>
+                    <p className="small text-muted">
+                      ${product.variations[0].price}
+                    </p>
                   </div>
-                  <h6>
-                    {" "}
-                    <a className="reset-anchor" href="detail.html">
-                      {product.name}
-                    </a>
-                  </h6>
-                  <p className="small text-muted">${product.variations[0].price}</p>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
     </section>
