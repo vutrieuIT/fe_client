@@ -1,2 +1,2 @@
-// env.template.js
-window.__HELLO_MESSAGE__ = "${HELLO_MESSAGE}";
+// public/env.template.js
+window.__API_URL__ = '${API_URL}';

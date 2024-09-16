@@ -2,11 +2,18 @@
 
 echo "Starting entrypoint.sh"
 
-echo "Environment variables:"
-echo "$HELLO_MESSAGE"
+# Export environment variables explicitly
+export API_URL=${API_URL}
 
-# Replace placeholders in env.template.js with actual environment variables
-envsubst < /usr/share/nginx/html/env.template.js > /usr/share/nginx/html/env.js
+# Kiểm tra nếu các biến môi trường có giá trị không
+if [ -z "$API_URL" ]; then
+  echo "No environment variables found, skipping env substitution."
+else
+  echo "Environment variables found, performing substitution."
+
+  # Replace placeholders in env.template.js with actual environment variables
+  envsubst '$API_URL' < /usr/share/nginx/html/env.template.js > /usr/share/nginx/html/env.js
+fi
 
 # Start the web server (e.g., Nginx)
 # exec "$@"
