@@ -22,7 +22,7 @@ pipeline {
         stage('Build') {
             steps {
                 withCredentials([string(credentialsId: 'VITE_GG_CLIENT_ID', variable: 'gg_client_id')]) {
-                    sh 'docker build -t --build-arg VITE_GG_CLIENT_ID=${gg_client_id} ${env.IMAGE_NAME} .'
+                    sh 'docker build -t ${env.IMAGE_NAME} --build-arg VITE_GG_CLIENT_ID=${gg_client_id} .'
                 }
                 withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
                     sh 'docker push ${env.IMAGE_NAME}'
