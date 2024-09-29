@@ -20,6 +20,7 @@ pipeline {
             }
         }
         stage('Build') {
+            sh 'git branch'
             when {
                 branch 'protect/deploy'
             }
