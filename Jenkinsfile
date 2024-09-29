@@ -19,6 +19,14 @@ pipeline {
                 }
             }
         }
+        stage('Debug') {
+            steps {
+                script {
+                    echo "Current GIT_BRANCH: ${env.GIT_BRANCH}"
+                    echo "Current REF: ${env.GIT_COMMIT}"
+                }
+            }
+        }        
         stage('Build') {
             when {
                 branch 'origin/protect/deploy'
