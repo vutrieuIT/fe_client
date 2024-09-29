@@ -18,19 +18,8 @@ pipeline {
                     }
                 }
             }
-        }
-        stage('Debug') {
-            steps {
-                script {
-                    echo "Current GIT_BRANCH: ${env.GIT_BRANCH}"
-                    echo "Current REF: ${env.GIT_COMMIT}"
-                }
-            }
-        }        
+        }      
         stage('Build') {
-            when {
-                branch '/protect/deploy'
-            }
             steps {
                 withCredentials([string(credentialsId: 'VITE_GG_CLIENT_ID', variable: 'gg-client-id')]) {
                     sh 'docker build -t --build-arg VITE_GG_CLIENT_ID=${gg-client-id} ${env.IMAGE_NAME} .'
