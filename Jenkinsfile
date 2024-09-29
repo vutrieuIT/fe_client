@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git branch: 'protect/deploy', url: 'https://github.com/vutrieuIT/fe_admin.git'
+                git branch: 'protect/deploy', url: 'https://github.com/vutrieuIT/fe_client.git'
             }
         }
         stage('Check Branch') {
