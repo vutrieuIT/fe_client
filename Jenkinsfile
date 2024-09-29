@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Build') {
             when {
-                branch 'protect/deploy'
+                branch 'origin/protect/deploy'
             }
             steps {
                 withCredentials([string(credentialsId: 'VITE_GG_CLIENT_ID', variable: 'gg-client-id')]) {
