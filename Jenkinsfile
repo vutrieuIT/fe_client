@@ -12,7 +12,7 @@ pipeline {
         stage('Check Branch') {
             steps {
                 script {
-                    if (env.GIT_BRANCH != 'origin/protect/deploy') {
+                    if (env.GIT_BRANCH != 'protect/deploy') {
                         error("Not on protect/deploy branch, exiting pipeline.")
                     }
                 }
