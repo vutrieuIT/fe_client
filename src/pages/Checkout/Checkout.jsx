@@ -13,9 +13,9 @@ const Checkout = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
 
-  const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([]);
-  const [wards, setWards] = useState([]);
+  const [provinceList, setProvinceList] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [wardList, setWardList] = useState([]);
   const [street, setStreet] = useState("");
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
@@ -115,8 +115,7 @@ const Checkout = () => {
     axios
       .get("https://provinces.open-api.vn/api/p/")
       .then((res) => {
-        setProvinces(res.data);
-        console.log(res.data, "provinces");
+        setProvinceList(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -128,7 +127,7 @@ const Checkout = () => {
     axios
       .get(`https://provinces.open-api.vn/api/p/${e.target.value}/?depth=2`)
       .then((res) => {
-        setDistricts(res.data.districts);
+        setDistrictList(res.data.districts);
         setProvince(res.data.name);
       });
   };
@@ -138,14 +137,15 @@ const Checkout = () => {
     axios
       .get(`https://provinces.open-api.vn/api/d/${e.target.value}/?depth=2`)
       .then((res) => {
-        setWards(res.data.wards);
+        setWardList(res.data.wards);
         setDistrict(res.data.name);
       });
   };
 
   // lấy đơn vị hành chính cấp xã
   const handleWardChange = (e) => {
-    setWard(e.target.value);
+    const selectedName = e.target.options[e.target.selectedIndex].text;
+    setWard(selectedName);
   };
   return (
     <section>
@@ -276,7 +276,7 @@ const Checkout = () => {
                       onChange={handleProvinceChange}
                     >
                       <option value="">Chọn tỉnh/thành phố</option>
-                      {provinces.map((province, index) => (
+                      {provinceList.map((province, index) => (
                         <option key={index} value={province.code}>
                           {province.name}
                         </option>
@@ -296,7 +296,7 @@ const Checkout = () => {
                       onChange={handleDistrictChange}
                     >
                       <option value="">Chọn quận/huyện</option>
-                      {districts.map((district, index) => (
+                      {districtList.map((district, index) => (
                         <option key={index} value={district.code}>
                           {district.name}
                         </option>
@@ -316,7 +316,7 @@ const Checkout = () => {
                       onChange={handleWardChange}
                     >
                       <option value="">Chọn phường/xã</option>
-                      {wards.map((ward, index) => (
+                      {wardList.map((ward, index) => (
                         <option key={index} value={ward.code}>
                           {ward.name}
                         </option>
@@ -338,6 +338,7 @@ const Checkout = () => {
                       value={street}
                       onChange={handleAddressChange}
                     />
+                    {address}
                   </div>
                   <div className="col-lg-12 form-group">
                     <button className="btn btn-dark" type="submit">
