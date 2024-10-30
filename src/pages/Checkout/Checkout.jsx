@@ -117,6 +117,10 @@ const Checkout = () => {
       .get(API_URL + "/ghn/province")
       .then((res) => {
         setProvinceList(res.data.data);
+        // sort theo tên tỉnh thành
+        setProvinceList((prev) => {
+          return prev.sort((a, b) => a.ProvinceName.localeCompare(b.ProvinceName, "vi"));
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -125,24 +129,28 @@ const Checkout = () => {
 
   // lấy đơn vị hành chính cấp huyện
   const handleProvinceChange = (e) => {
-    axios
-      .get(API_URL + `/ghn/district/${e.target.value}`)
-      .then((res) => {
-        setDistrictList(res.data.data);
+    axios.get(API_URL + `/ghn/district/${e.target.value}`).then((res) => {
+      setDistrictList(res.data.data);
+      // sort theo tên huyện
+      setDistrictList((prev) => {
+        return prev.sort((a, b) => a.DistrictName.localeCompare(b.DistrictName, "vi"));
       });
-      const selectedName = e.target.options[e.target.selectedIndex].text;
-      setProvince(selectedName);
+    });
+    const selectedName = e.target.options[e.target.selectedIndex].text;
+    setProvince(selectedName);
   };
 
   // lấy đơn vị hành chính cấp xã
   const handleDistrictChange = (e) => {
-    axios
-      .get(API_URL + `/ghn/ward/${e.target.value}`)
-      .then((res) => {
-        setWardList(res.data.data);
+    axios.get(API_URL + `/ghn/ward/${e.target.value}`).then((res) => {
+      setWardList(res.data.data);
+      // sort theo tên xã
+      setWardList((prev) => {
+        return prev.sort((a, b) => a.WardName.localeCompare(b.WardName, "vi"));
       });
-      const selectedName = e.target.options[e.target.selectedIndex].text;
-      setDistrict(selectedName);
+    });
+    const selectedName = e.target.options[e.target.selectedIndex].text;
+    setDistrict(selectedName);
   };
 
   // set đơn vị hành chính cấp xã
@@ -245,7 +253,7 @@ const Checkout = () => {
                             <label className="form-label text-sm text-uppercase" htmlFor="company">Company name (optional) </label>
                             <input className="form-control form-control-lg" type="text" id="company" placeholder="Your company name">
                         </div> */}
-                  <div className="col-lg-6">
+                  {/* <div className="col-lg-6">
                     <label
                       className="form-label text-sm text-uppercase"
                       htmlFor="city"
@@ -257,7 +265,7 @@ const Checkout = () => {
                       type="text"
                       id="city"
                     />
-                  </div>
+                  </div> */}
                   <div className="col-lg-12">
                     <label
                       className="form-label text-sm text-uppercase"
