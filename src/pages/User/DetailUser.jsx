@@ -1,5 +1,3 @@
-import "./DetailUser.css";
-
 const DetailUser = () => {
   const userInfo = JSON.parse(sessionStorage.getItem("userInfo"))[0];
 

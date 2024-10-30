@@ -12,6 +12,7 @@ const Checkout = () => {
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
 
   const [provinceList, setProvinceList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
@@ -22,9 +23,24 @@ const Checkout = () => {
   const [ward, setWard] = useState("");
 
   useEffect(() => {
+    const fetchUserInfo = async () => {
+      const userInfos = await sessionStorage.getItem("userInfo");
+
+      if (userInfos) {
+        const auth_user = JSON.parse(userInfos)[0];
+        setFullName(auth_user.name);
+        setEmail(auth_user.email);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
     // Gọi hàm để lấy carts của user khi component được render
     getCartsByUser();
     console.log(carts);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Dependency array rỗng đảm bảo hàm chỉ được gọi một lần khi component mount
 
   const userInfos = sessionStorage.getItem("userInfo");
@@ -119,7 +135,9 @@ const Checkout = () => {
         setProvinceList(res.data.data);
         // sort theo tên tỉnh thành
         setProvinceList((prev) => {
-          return prev.sort((a, b) => a.ProvinceName.localeCompare(b.ProvinceName, "vi"));
+          return prev.sort((a, b) =>
+            a.ProvinceName.localeCompare(b.ProvinceName, "vi")
+          );
         });
       })
       .catch((err) => {
@@ -133,7 +151,9 @@ const Checkout = () => {
       setDistrictList(res.data.data);
       // sort theo tên huyện
       setDistrictList((prev) => {
-        return prev.sort((a, b) => a.DistrictName.localeCompare(b.DistrictName, "vi"));
+        return prev.sort((a, b) =>
+          a.DistrictName.localeCompare(b.DistrictName, "vi")
+        );
       });
     });
     const selectedName = e.target.options[e.target.selectedIndex].text;
@@ -158,6 +178,7 @@ const Checkout = () => {
     const selectedName = e.target.options[e.target.selectedIndex].text;
     setWard(selectedName);
   };
+
   return (
     <section>
       <div className="container">
@@ -228,6 +249,8 @@ const Checkout = () => {
                       type="email"
                       id="email"
                       name="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       placeholder="e.g. Jason@example.com"
                     />
                   </div>
@@ -249,23 +272,6 @@ const Checkout = () => {
                       onChange={handlePhoneNumberChange}
                     />
                   </div>
-                  {/* <div className="col-lg-6">
-                            <label className="form-label text-sm text-uppercase" htmlFor="company">Company name (optional) </label>
-                            <input className="form-control form-control-lg" type="text" id="company" placeholder="Your company name">
-                        </div> */}
-                  {/* <div className="col-lg-6">
-                    <label
-                      className="form-label text-sm text-uppercase"
-                      htmlFor="city"
-                    >
-                      Thành phố{" "}
-                    </label>
-                    <input
-                      className="form-control form-control-lg"
-                      type="text"
-                      id="city"
-                    />
-                  </div> */}
                   <div className="col-lg-12">
                     <label
                       className="form-label text-sm text-uppercase"
