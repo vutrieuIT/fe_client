@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 // import styles from "./styles.module.css";
 // import { useDispatch } from "react-redux";
 // import cartSlice from "../../state/cartSlice";
-import API_URL from "../../config/Api";
+import API_URL, {HOST} from "../../config/Api";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -111,16 +111,16 @@ const DetailProduct = () => {
 
   useEffect(() => {
     // Tính toán giá thấp nhất và cao nhất từ các variant
-    let min = Number.MAX_VALUE;
-    let max = 0;
-    productDetail &&
-      productDetail.variations &&
-      productDetail.variations.forEach((variation) => {
-        if (parseInt(variation.price) < min) min = parseInt(variation.price);
-        if (parseInt(variation.price) > max) max = parseInt(variation.price);
-      });
-    setMinPrice(min);
-    setMaxPrice(max);
+    // let min = Number.MAX_VALUE;
+    // let max = 0;
+    // productDetail &&
+    //   productDetail.variations &&
+    //   productDetail.variations.forEach((variation) => {
+    //     if (parseInt(variation.price) < min) min = parseInt(variation.price);
+    //     if (parseInt(variation.price) > max) max = parseInt(variation.price);
+    //   });
+    // setMinPrice(min);
+    // setMaxPrice(max);
   }, [productDetail]);
 
   const getRecommnedProduct = async () => {
@@ -141,15 +141,28 @@ const DetailProduct = () => {
   useEffect(() => {
     if (!productDetail.length) {
       getDetail(id);
-      getSpecification(id);
+      // getSpecification(id);
     }
     // const cachedProducts = JSON.parse(sessionStorage.getItem("products"));
     // if (cachedProducts) {
     //   setProducts(cachedProducts);
     // }
-    getRecommnedProduct();
+    // getRecommnedProduct();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // render giao diện
+  const variantImageRender = (color) => {
+    // {"id":"672b7b1db546d021183fcb8f","name":"test1","brandName":"test1","description":"<p>dev</p>","isShow":false,"status":"0","ram":8,"operatingSystem":"Android","mainCamera":12,"selfieCamera":8,"batterySize":2800,"screenSize":4.6,"weight":111,"height":1,"width":3,"length":7,"specifications":[{"internalMemory":1,"price":10,"colorVariant":[{"color":"red","quantity":200},{"color":"blue","quantity":20}]},{"internalMemory":12,"price":21,"colorVariant":[]}],"variants":[{"color":"red","images":["\\images\\test\\1731504191121_anh-anime-full-hd-4k-scaled.jpg","\\images\\test\\1731504191128_hinh-nen-dep-cho-may-tinh-full-hd-1.jpg","\\images\\test\\1731504191129_hinh-nen-dep-cho-may-tinh-full-hd-2 (2).jpg","\\images\\test\\1731504191131_hinh-nen-dep-cho-may-tinh-full-hd-2.jpg","\\images\\test\\1731504191119_anh-anime-full-hd-4k-scaled (2).jpg"]},{"color":"blue","images":["\\images\\test\\1731504191119_anh-anime-full-hd-4k-scaled (2).jpg","\\images\\test\\1731504191121_anh-anime-full-hd-4k-scaled.jpg","\\images\\test\\1731504191128_hinh-nen-dep-cho-may-tinh-full-hd-1.jpg","\\images\\test\\1731504191129_hinh-nen-dep-cho-may-tinh-full-hd-2 (2).jpg","\\images\\test\\1731504191131_hinh-nen-dep-cho-may-tinh-full-hd-2.jpg"]}]}
+    const variants = productDetail?.variants;
+    if (variants) {
+      const variant = variants.find((v) => v.color === color);
+      if (variant) {
+        return variant.images;
+      }
+    }
+
+  }
 
   return (
     <section className="py-5">
@@ -175,6 +188,20 @@ const DetailProduct = () => {
                           />
                         </div>
                       ))}
+                      {
+                        variantImageRender("red")?.map((image, index) => (
+                          <div
+                            key={index}
+                            className="swiper-slide h-auto swiper-thumb-item mb-3"
+                          >
+                            <img
+                              className="w-100"
+                              src={HOST + image}
+                              alt={`Product variation ${index + 1}`}
+                            />
+                          </div>
+                        ))
+                      }
                   </div>
                 </div>
               </div>
@@ -199,6 +226,24 @@ const DetailProduct = () => {
                           </a>
                         </div>
                       ))}
+                      {
+                        variantImageRender("red")?.map((image, index) => (
+                          <div key={index} className="swiper-slide h-auto">
+                            <a
+                              className="glightbox product-view"
+                              href={HOST + image}
+                              data-gallery="gallery2"
+                              data-glightbox={`Product item ${index + 1}`}
+                            >
+                              <img
+                                className="img-fluid"
+                                src={HOST + image}
+                                alt={`Product variation ${index + 1}`}
+                              />
+                            </a>
+                          </div>
+                        ))
+                      }
                   </div>
                 </div>
               </div>
