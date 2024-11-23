@@ -7,26 +7,11 @@ import cartSlice from "../../state/cartSlice";
 import axios from "axios";
 import API_URL from "../../config/Api";
 function Home() {
-  const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
   const [bestsellingProducts, setBestsellingProducts] = useState([]);
   const [hotProducts, setHotProducts] = useState([]);
   const hasLogin = sessionStorage.getItem("hasLogin");
-  const getCategories = async () => {
-    try {
-      const response = await axios.get(API_URL.concat("/danh-muc-san-pham"));
-      const data = await response.data;
-      if (response.status === 200) {
-        console.log(data);
-        return setCategories(data);
-      }
-    } catch (error) {
-      // console.log(error.response.data.errors.name[0]);
-
-      console.log(error);
-    }
-  };
   const getProducts = async () => {
     try {
       const response = await axios.get(API_URL.concat("/san-pham"));
@@ -77,9 +62,6 @@ function Home() {
     }
   };
   useEffect(() => {
-    if (!categories.length) {
-      getCategories();
-    }
     if (!products.length) {
       getProducts();
     }
@@ -92,44 +74,7 @@ function Home() {
     if (!hotProducts.length) {
       getHotProducts();
     }
-    // const data = [
-    //     {id:1,name:'Điện thoại'},
-    //     {id:2,name:'Máy tính'},
-    //     {id:3,name:'Đồng hồ'},
-    //     {id:4,name:'Tai nghe không dây'},
-    //     {id:9,name:'Tai nghe có dây'},
-    //     {id:5,name:'Ốp lưng'},
-    //     {id:6,name:'Kính VR'},
-    //     {id:7,name:'Loa không dây'},
-    //     {id:8,name:'Loa có dây'},
-    //     {id:10,name:'Sạc dự phòng'},
-    // ];
-    // const dataProducts = [
-    //     {id:1,name:'Điện thoại',img:'iphone-14-pro_2__5.jpg',status:'Sale',price:'1500',price_sale:'',type:'iPhone 15 pro max'},
-    //     {id:2,name:'Apple watch 6', img:'Apple_Watch_black.jpg',status:'Mới',price:'600',price_sale:'',type:'Apple watch'},
-    //     {id:3,name:'Apple watch 7',img:'Apple_Watch_Series_7.jpg',status:'Hết hàng',price:'800',price_sale:'',type:'Apple watch'},
-    //     {id:4,name:'Apple watch black',img:'Apple_Watch_black.jpg',status:'Bán chạy',price:'400',price_sale:'',type:'Apple watch '},
-    //     {id:5,name:'iPhone 14',img:'iphone-14-plus.jpg',status:'',price:'1000',price_sale:'',type:'iPhone'},
-    //     {id:6,name:'iPhone 14 pro',img:'iphone-14-pro_2__5.jpg',status:'',price:'1200',price_sale:'',type:'iPhone'},
-    //     {id:7,name:'iPhone 13',img:'iphone-13.jpg',status:'',price:'2600',price_sale:'',type:'iPhone'},
-    //     {id:8,name:'iPhone 15 pro max',img:'iphone-15-pro-max_1.jpg',status:'',price:'4600',price_sale:'',type:'iPhone'},
-    // ];
-  }, [categories, products]);
-  const category = categories.map((category) => {
-    return (
-      <div
-        key={category.id}
-        className="col-sm-12 col-xl-2 mb-4 "
-        style={{ width: 262, minHeight: 75, maxHeight: 80 }}
-      >
-        <a href="##">
-          <button className="text-start rounded-3 btn btn-light w-100 h-100 ">
-            <p className="m-1 overflow-hidden">{category.title}</p>
-          </button>
-        </a>
-      </div>
-    );
-  });
+  }, [products]);
 
   const dispatch = useDispatch();
   // const globalstate = useSelector(state=>state.cartState);
@@ -539,81 +484,6 @@ function Home() {
                   Xem ngay những sản phẩm mới
                 </a>
               </div>
-            </div>
-          </div>
-        </section>
-        {/*<!-- CATEGORIES ALL SECTION-->*/}
-        <section className="pt-5">
-          <header className="text-start">
-            <p className="small text-muted small text-uppercase mb-1">
-              Dưới đây là danh mục sản phẩm của chúng tôi
-            </p>
-            <h2 className="h5 text-uppercase mb-4">
-              Tìm hiểu danh mục sau đây
-            </h2>
-          </header>
-          <div className="row">{category}</div>
-        </section>
-        {/*<!-- CATEGORIES SECTION-->*/}
-        <section className="pt-5">
-          <header className="text-center">
-            <p className="small text-muted small text-uppercase mb-1">
-              Dưới đây là danh mục sản phẩm của chúng tôi
-            </p>
-            <h2 className="h5 text-uppercase mb-4">
-              Tìm hiểu danh mục sau đây
-            </h2>
-          </header>
-          <div className="row">
-            <div className="col-md-4">
-              <a
-                className={`category-item ${styles.heightImageProduct}`}
-                href="shop.html"
-              >
-                <img
-                  className={`img-fluid ${styles.categoryBorderStyle}`}
-                  src="img/banner_1.jpg"
-                  alt="banner_1.jpg"
-                />
-                <strong className="category-item-title rounded-3">
-                  MacBook
-                </strong>
-              </a>
-            </div>
-            <div className="col-md-4">
-              <a className="category-item mb-4" href="shop.html">
-                <img
-                  className={`img-fluid ${styles.categoryBorderStyle}`}
-                  src="./img/banner_2.jfif"
-                  alt="banner_2.jfif"
-                />
-                <strong className="category-item-title rounded-3">Ipad</strong>
-              </a>
-              <a className="category-item" href="shop.html">
-                <img
-                  className={`img-fluid ${styles.categoryBorderStyle}`}
-                  src="img/banner_3.jpg"
-                  alt=""
-                />
-                <strong className="category-item-title rounded-3">
-                  Apple Watch
-                </strong>
-              </a>
-            </div>
-            <div className="col-md-4">
-              <a
-                className={`category-item ${styles.heightImageProduct}`}
-                href="shop.html"
-              >
-                <img
-                  className={`img-fluid ${styles.categoryBorderStyle}`}
-                  src="img/banner_4.jpg"
-                  alt="banner_4.jpg"
-                />
-                <strong className="category-item-title rounded-3">
-                  Iphone
-                </strong>
-              </a>
             </div>
           </div>
         </section>
