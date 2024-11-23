@@ -5,7 +5,7 @@ import URL_PATH from "../../config/UrlPath";
 import { useDispatch } from "react-redux";
 import cartSlice from "../../state/cartSlice";
 import axios from "axios";
-import API_URL from "../../config/Api";
+import API_URL, { HOST } from "../../config/Api";
 function Home() {
   const [products, setProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
@@ -65,15 +65,15 @@ function Home() {
     if (!products.length) {
       getProducts();
     }
-    if (!newProducts.length) {
-      getNewProducts();
-    }
-    if (!bestsellingProducts.length) {
-      getBestsellingProducts();
-    }
-    if (!hotProducts.length) {
-      getHotProducts();
-    }
+    // if (!newProducts.length) {
+    //   getNewProducts();
+    // }
+    // if (!bestsellingProducts.length) {
+    //   getBestsellingProducts();
+    // }
+    // if (!hotProducts.length) {
+    //   getHotProducts();
+    // }
   }, [products]);
 
   const dispatch = useDispatch();
@@ -361,6 +361,84 @@ function Home() {
       </div>
     );
   });
+  const productView = products.map((product) => {
+    if (product.specifications.length === 0) return;
+    return (
+      <div key={product.id} className="col-xl-3 col-lg-4 col-sm-6">
+        <div
+          className={`product text-start bg-light mb-3 ${styles.borderProduct} ${styles.paddingImageProduct}`}
+        >
+          <div className="position-relative mb-3">
+            <div className="badge">{product.status} logic</div>
+            <Link className="d-block" to={`./cua-hang/${product.id}`}>
+              <img
+                className={`img-fluid ${styles.borderImageProduct}`}
+                src={`${HOST.concat(product.variants[0].images[0])}`}
+                alt={product.name}
+              />
+            </Link>
+            <div className="product-overlay">
+              <ul className="mb-0 list-inline">
+                <li className="list-inline-item m-0 p-0">
+                  <a className="btn btn-sm btn-outline-dark" href="#!">
+                    <i className="far fa-heart"></i>
+                  </a>
+                </li>
+                {!hasLogin ? (
+                  <li className="list-inline-item m-0 p-0">
+                    <a className="btn btn-sm btn-dark" href={"dang-nhap.html"}>
+                      <i className="fa fa-cart-plus"></i> Thêm vào giỏ
+                    </a>
+                  </li>
+                ) : (
+                  <li className="list-inline-item m-0 p-0">
+                    <button
+                      className="btn btn-sm btn-dark"
+                      onClick={() => {
+                        dispatch(add({ ...product, quantity: 1 }));
+                      }}
+                    >
+                      <i className="fa fa-cart-plus"></i> Thêm vào giỏ{" "}
+                    </button>
+                  </li>
+                )}
+                <li className="list-inline-item me-0">
+                  <a
+                    className="btn btn-sm btn-outline-dark"
+                    href="#productView"
+                    data-bs-toggle="modal"
+                  >
+                    <i className="fas fa-expand"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <h6 className="text-center">
+            {" "}
+            <Link
+              className="reset-anchor"
+              to={`/${URL_PATH}/cua-hang/${product.id}`}
+            >
+              {product.type}
+            </Link>
+          </h6>
+          <h6 className="text-center">
+            {" "}
+            <Link
+              className="reset-anchor"
+              to={`/${URL_PATH}/cua-hang/${product.id}`}
+            >
+              {product.name}
+            </Link>
+          </h6>
+          <p className="text-center mb-1 small text-black">
+            ${product.specifications[0].price}
+          </p>
+        </div>
+      </div>
+    );
+  });
   return (
     <section>
       {/*<!--  Modal -->*/}
@@ -524,6 +602,19 @@ function Home() {
           <div className="row">
             {/*<!-- PRODUCT-->*/}
             {product_bestsellingProducts}
+          </div>
+        </section>
+        {/* PRODUCT */}
+        <section className="py-5">
+          <header>
+            <p className="small text-muted small text-uppercase mb-1">
+              Made the hard way
+            </p>
+            <h2 className="h5 text-uppercase mb-4">Danh sách sản phẩm</h2>
+          </header>
+          <div className="row">
+            {/*<!-- PRODUCT-->*/}
+            {productView}
           </div>
         </section>
         {/*<!-- SERVICES-->*/}
