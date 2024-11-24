@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 // import styles from "./styles.module.css";
 // import { useDispatch } from "react-redux";
 // import cartSlice from "../../state/cartSlice";
-import API_URL, {HOST} from "../../config/Api";
+import API_URL, { HOST } from "../../config/Api";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -33,6 +33,8 @@ const DetailProduct = () => {
   // selected specification
   const [selectedSpecification, setSelectedSpecification] = useState({});
   const [listSpecificationColor, setListSpecificationColor] = useState([]);
+  // ảnh được chọn
+  const [selectedImage, setSelectedImage] = useState(0);
 
   const handleColorClick = (colorType, variant) => {
     setSelectedColor(colorType);
@@ -43,7 +45,8 @@ const DetailProduct = () => {
   const handleSpecificationClick = (specification) => {
     setSelectedSpecification(specification);
     setListSpecificationColor(specification.colorVariant);
-  }
+    setSelectedColor(specification.colorVariant?.[0]?.color);
+  };
 
   const getDetail = async (id) => {
     try {
@@ -133,7 +136,7 @@ const DetailProduct = () => {
   useEffect(() => {
     if (!productDetail.length) {
       getDetail(id);
-      
+
       // getSpecification(id);
     }
     // const cachedProducts = JSON.parse(sessionStorage.getItem("products"));
@@ -146,7 +149,6 @@ const DetailProduct = () => {
 
   // render giao diện
   const variantImageRender = (color) => {
-    // {"id":"672b7b1db546d021183fcb8f","name":"test1","brandName":"test1","description":"<p>dev</p>","isShow":false,"status":"0","ram":8,"operatingSystem":"Android","mainCamera":12,"selfieCamera":8,"batterySize":2800,"screenSize":4.6,"weight":111,"height":1,"width":3,"length":7,"specifications":[{"internalMemory":1,"price":10,"colorVariant":[{"color":"red","quantity":200},{"color":"blue","quantity":20}]},{"internalMemory":12,"price":21,"colorVariant":[]}],"variants":[{"color":"red","images":["\\images\\test\\1731504191121_anh-anime-full-hd-4k-scaled.jpg","\\images\\test\\1731504191128_hinh-nen-dep-cho-may-tinh-full-hd-1.jpg","\\images\\test\\1731504191129_hinh-nen-dep-cho-may-tinh-full-hd-2 (2).jpg","\\images\\test\\1731504191131_hinh-nen-dep-cho-may-tinh-full-hd-2.jpg","\\images\\test\\1731504191119_anh-anime-full-hd-4k-scaled (2).jpg"]},{"color":"blue","images":["\\images\\test\\1731504191119_anh-anime-full-hd-4k-scaled (2).jpg","\\images\\test\\1731504191121_anh-anime-full-hd-4k-scaled.jpg","\\images\\test\\1731504191128_hinh-nen-dep-cho-may-tinh-full-hd-1.jpg","\\images\\test\\1731504191129_hinh-nen-dep-cho-may-tinh-full-hd-2 (2).jpg","\\images\\test\\1731504191131_hinh-nen-dep-cho-may-tinh-full-hd-2.jpg"]}]}
     const variants = productDetail?.variants;
     if (variants) {
       const variant = variants.find((v) => v.color === color);
@@ -154,8 +156,7 @@ const DetailProduct = () => {
         return variant.images;
       }
     }
-
-  }
+  };
 
   return (
     <section className="py-5">
@@ -167,44 +168,43 @@ const DetailProduct = () => {
               <div className="col-sm-2 p-sm-0 order-2 order-sm-1 mt-2 mt-sm-0 px-xl-2">
                 <div className="swiper product-slider-thumbs">
                   <div className="swiper-wrapper d-inline">
-                      {
-                        variantImageRender(selectedColor)?.map((image, index) => (
-                          <div
-                            key={index}
-                            className="swiper-slide h-auto swiper-thumb-item mb-3"
-                          >
-                            <img
-                              className="w-100"
-                              src={HOST + image}
-                              alt={`Product variation ${index + 1}`}
-                            />
-                          </div>
-                        ))
-                      }
+                    {variantImageRender(selectedColor)?.map((image, index) => (
+                      <div
+                        key={index}
+                        className="swiper-slide h-auto swiper-thumb-item mb-3"
+                        onClick={() => setSelectedImage(image)}
+                      >
+                        <img
+                          className="w-100"
+                          src={HOST + image}
+                          alt={`Product variation ${index + 1}`}
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
               <div className="col-sm-10 order-1 order-sm-2">
                 <div className="swiper product-slider">
                   <div className="swiper-wrapper">
-                      {
-                        variantImageRender(selectedColor)?.map((image, index) => (
-                          <div key={index} className="swiper-slide h-auto">
-                            <a
-                              className="glightbox product-view"
-                              href={HOST + image}
-                              data-gallery="gallery2"
-                              data-glightbox={`Product item ${index + 1}`}
-                            >
-                              <img
-                                className="img-fluid"
-                                src={HOST + image}
-                                alt={`Product variation ${index + 1}`}
-                              />
-                            </a>
-                          </div>
-                        ))
-                      }
+                    {variantImageRender(selectedColor)?.map((image, index) =>
+                      selectedImage === image ? (
+                        <div key={index} className="swiper-slide h-auto">
+                          <a
+                            className="glightbox product-view"
+                            href={HOST + image}
+                            data-gallery="gallery2"
+                            data-glightbox={`Product item ${index + 1}`}
+                          >
+                            <img
+                              className="img-fluid"
+                              src={HOST + image}
+                              alt={`Product variation ${index + 1}`}
+                            />
+                          </a>
+                        </div>
+                      ) : null
+                    )}
                   </div>
                 </div>
               </div>
@@ -223,14 +223,15 @@ const DetailProduct = () => {
                     <button
                       key={index}
                       className={`btn btn-outline-dark mx-1 ${
-                        selectedSpecification.internalMemory === specification.internalMemory
+                        selectedSpecification.internalMemory ===
+                        specification.internalMemory
                           ? "active"
                           : ""
                       }`}
-                      onClick={() =>
-                        handleSpecificationClick(specification)
-                      }
-                      >{specification.internalMemory} GB</button>
+                      onClick={() => handleSpecificationClick(specification)}
+                    >
+                      {specification.internalMemory} GB
+                    </button>
                   ))}
                   <h4>Màu sắc</h4>
                   {listSpecificationColor?.map((variant, index) => (
@@ -243,25 +244,11 @@ const DetailProduct = () => {
                     >
                       {variant.color}
                     </button>
-                  ))}  
-
+                  ))}
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Giá:</h3>
                 <div className="price">
-                  {
-                    selectedSpecification?.price !== "0.00" ? (
-                      <>
-                        <span className="text-muted me-2">
-                          {selectedSpecification?.price} vnd
-                        </span>
-                        {/* <span className="text-danger">
-                          ${selectedSpecification?.price_sale}
-                        </span> */}
-                      </>
-                    ) : (
-                      <span>${selectedSpecification?.price} vnd</span>
-                    )
-                  }
+                  <span>{selectedSpecification?.price} vnd</span>
                 </div>
                 {/* Add to Cart button and Quantity input */}
                 <div className="flex items-center mt-4">
@@ -325,32 +312,38 @@ const DetailProduct = () => {
                 <div className="p-4 p-lg-12 bg-white">
                   <h6 className="fs-4 mb-4">Thông tin về sản phẩm này</h6>
                   <p className="mb-4">
-                  <strong>Mô tả:</strong> {productDetail.description}
-                </p>
-                <h3 className="text-lg font-semibold mb-2">Thông số kỹ thuật:</h3>
-                <ul className="list-unstyled mb-4">
-                 <li>
-                    <strong>Thương hiệu:</strong> {productDetail.brandName}
-                 </li>
-                  <li>
-                    <strong>RAM:</strong> {productDetail.ram} GB
-                  </li>
-                  <li>
-                    <strong>Hệ điều hành:</strong> {productDetail.operatingSystem}
-                  </li>
-                  <li>
-                    <strong>Camera sau:</strong> {productDetail.mainCamera} MP
-                  </li>
-                  <li>
-                    <strong>Camera trước:</strong> {productDetail.selfieCamera} MP
-                  </li>
-                  <li>
-                    <strong>Dung lượng pin:</strong> {productDetail.batterySize} mAh
-                  </li>
-                  <li>
-                    <strong>Kích thước màn hình:</strong> {productDetail.screenSize} inches
-                  </li>
-                </ul>
+                    <strong>Mô tả:</strong> {productDetail.description}
+                  </p>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Thông số kỹ thuật:
+                  </h3>
+                  <ul className="list-unstyled mb-4">
+                    <li>
+                      <strong>Thương hiệu:</strong> {productDetail.brandName}
+                    </li>
+                    <li>
+                      <strong>RAM:</strong> {productDetail.ram} GB
+                    </li>
+                    <li>
+                      <strong>Hệ điều hành:</strong>{" "}
+                      {productDetail.operatingSystem}
+                    </li>
+                    <li>
+                      <strong>Camera sau:</strong> {productDetail.mainCamera} MP
+                    </li>
+                    <li>
+                      <strong>Camera trước:</strong>{" "}
+                      {productDetail.selfieCamera} MP
+                    </li>
+                    <li>
+                      <strong>Dung lượng pin:</strong>{" "}
+                      {productDetail.batterySize} mAh
+                    </li>
+                    <li>
+                      <strong>Kích thước màn hình:</strong>{" "}
+                      {productDetail.screenSize} inches
+                    </li>
+                  </ul>
                 </div>
               </div>
               <div
