@@ -185,7 +185,7 @@ const DetailProduct = () => {
                 </div>
               </div>
               <div className="col-sm-10 order-1 order-sm-2">
-                <div className="swiper product-slider">
+                <div className="swiper product-slider w-100 h-100">
                   <div className="swiper-wrapper">
                     {variantImageRender(selectedColor)?.map((image, index) =>
                       selectedImage === image ? (
@@ -197,7 +197,8 @@ const DetailProduct = () => {
                             data-glightbox={`Product item ${index + 1}`}
                           >
                             <img
-                              className="img-fluid"
+                              className="img-fluid object-fit-contain w-100"
+                              style={{maxHeight: "500px"}}
                               src={HOST + image}
                               alt={`Product variation ${index + 1}`}
                             />
