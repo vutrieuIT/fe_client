@@ -25,42 +25,34 @@ const DetailProduct = () => {
   //   const { add } = cartSlice.actions;
   // detail
   const [selectedColor, setSelectedColor] = useState("");
-  const [minPrice, setMinPrice] = useState(Number.MAX_VALUE);
-  const [maxPrice, setMaxPrice] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null);
   // add to cart
   const [quantity, setQuantity] = useState(0);
   // recommend product
   const [recommendProducts, setRecommendProducts] = useState([]);
-  const [productSpecification, setProductSpecification] = useState([]);
+  // selected specification
+  const [selectedSpecification, setSelectedSpecification] = useState({});
+  const [listSpecificationColor, setListSpecificationColor] = useState([]);
 
   const handleColorClick = (colorType, variant) => {
     setSelectedColor(colorType);
     setSelectedProduct(variant);
     setQuantity(1);
   };
+
+  const handleSpecificationClick = (specification) => {
+    setSelectedSpecification(specification);
+    setListSpecificationColor(specification.colorVariant);
+  }
+
   const getDetail = async (id) => {
     try {
       const response = await axios.get(`${API_URL}/san-pham/${id}`);
       const data = response.data;
       setProductDetail(data);
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
-  // lấy thông số kỹ thuật sản phẩm
-  const getSpecification = async (id) => {
-    try {
-      const response = await axios.get(
-        `${API_URL}/san-pham/specification/${id}`
-      );
-      const data = response.data;
-      const specification = Object.entries(data).map(([key, value]) => ({
-        name: key,
-        value: value,
-      }));
-      setProductSpecification(specification);
+      setSelectedSpecification(data.specifications?.[0]);
+      setListSpecificationColor(data.specifications?.[0]?.colorVariant);
+      setSelectedColor(data.specifications?.[0]?.colorVariant?.[0]?.color);
     } catch (error) {
       console.log(error);
       return null;
@@ -141,6 +133,7 @@ const DetailProduct = () => {
   useEffect(() => {
     if (!productDetail.length) {
       getDetail(id);
+      
       // getSpecification(id);
     }
     // const cachedProducts = JSON.parse(sessionStorage.getItem("products"));
@@ -174,22 +167,8 @@ const DetailProduct = () => {
               <div className="col-sm-2 p-sm-0 order-2 order-sm-1 mt-2 mt-sm-0 px-xl-2">
                 <div className="swiper product-slider-thumbs">
                   <div className="swiper-wrapper d-inline">
-                    {productDetail &&
-                      productDetail.variations &&
-                      productDetail.variations.map((variation, index) => (
-                        <div
-                          key={index}
-                          className="swiper-slide h-auto swiper-thumb-item mb-3"
-                        >
-                          <img
-                            className="w-100"
-                            src={variation.image_url}
-                            alt={`Product variation ${index + 1}`}
-                          />
-                        </div>
-                      ))}
                       {
-                        variantImageRender("red")?.map((image, index) => (
+                        variantImageRender(selectedColor)?.map((image, index) => (
                           <div
                             key={index}
                             className="swiper-slide h-auto swiper-thumb-item mb-3"
@@ -208,26 +187,8 @@ const DetailProduct = () => {
               <div className="col-sm-10 order-1 order-sm-2">
                 <div className="swiper product-slider">
                   <div className="swiper-wrapper">
-                    {productDetail &&
-                      productDetail.variations &&
-                      productDetail.variations.map((variation, index) => (
-                        <div key={index} className="swiper-slide h-auto">
-                          <a
-                            className="glightbox product-view"
-                            href={variation.image_url}
-                            data-gallery="gallery2"
-                            data-glightbox={`Product item ${index + 1}`}
-                          >
-                            <img
-                              className="img-fluid"
-                              src={variation.image_url}
-                              alt={`Product variation ${index + 1}`}
-                            />
-                          </a>
-                        </div>
-                      ))}
                       {
-                        variantImageRender("red")?.map((image, index) => (
+                        variantImageRender(selectedColor)?.map((image, index) => (
                           <div key={index} className="swiper-slide h-auto">
                             <a
                               className="glightbox product-view"
@@ -251,76 +212,56 @@ const DetailProduct = () => {
           </div>
           <div className="col-lg-5">
             {/* <!-- PRODUCT DETAILS--> */}
-            {productDetail && productDetail.category?.name && (
+            {productDetail && (
               <div className="product-detail">
                 <h1 className="text-2xl font-bold mb-4">
                   {productDetail.name}
                 </h1>
-                <p className="mb-2">
-                  <strong>Category:</strong> {productDetail.category.name}
-                </p>
-                <p className="mb-4">
-                  <strong>Description:</strong> {productDetail.description}
-                </p>
-                <h3 className="text-lg font-semibold mb-2">Specifications:</h3>
-                <ul className="list-unstyled mb-4">
-                  {productSpecification.map((spec, index) => {
-                    const listFieldUnwanted = [
-                      "cellphoneId",
-                      "brand",
-                      "model",
-                      "price",
-                    ];
-                    const listFieldUnitGB = ["internalMemory", "ram"];
-                    const listFieldUnitInch = ["screenSize"];
-                    const listFieldUnitMP = ["mainCamera", "selfieCamera"];
-                    const listFieldUnitmAh = ["batteryCapacity"];
-                    const listFieldUnitGram = ["weight"];
-                    const unit = listFieldUnitGB.includes(spec.name)
-                      ? "GB"
-                      : listFieldUnitInch.includes(spec.name)
-                      ? "inch"
-                      : listFieldUnitMP.includes(spec.name)
-                      ? "MP"
-                      : listFieldUnitmAh.includes(spec.name)
-                      ? "mAh"
-                      : listFieldUnitGram.includes(spec.name)
-                      ? "gram"
-                      : "";
-                    return (
-                      !listFieldUnwanted.includes(spec.name) && (
-                        <li key={index}>
-                          <strong>{spec.name}:</strong> {spec.value} {unit}
-                        </li>
-                      )
-                    );
-                  })}
-                </ul>
-                <h3 className="text-lg font-semibold mb-2">Variations:</h3>
                 <div className="variation-buttons mb-4">
-                  {productDetail.variations.map((variation) => (
+                  <h4>Bộ nhớ</h4>
+                  {productDetail.specifications?.map((specification, index) => (
                     <button
-                      key={variation.id}
+                      key={index}
+                      className={`btn btn-outline-dark mx-1 ${
+                        selectedSpecification.internalMemory === specification.internalMemory
+                          ? "active"
+                          : ""
+                      }`}
                       onClick={() =>
-                        handleColorClick(variation.color_type, variation)
+                        handleSpecificationClick(specification)
                       }
-                      className={`color-button ${
-                        selectedColor === variation.color_type ? "selected" : ""
-                      } mr-2 mb-2 py-1 px-4 border border-gray-300 rounded-full hover:bg-gray-200 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200`}
-                    >
-                      {variation.color_type}
-                    </button>
+                      >{specification.internalMemory} GB</button>
                   ))}
+                  <h4>Màu sắc</h4>
+                  {listSpecificationColor?.map((variant, index) => (
+                    <button
+                      key={index}
+                      className={`btn btn-outline-dark mx-1 ${
+                        selectedColor === variant.color ? "active" : ""
+                      }`}
+                      onClick={() => handleColorClick(variant.color, variant)}
+                    >
+                      {variant.color}
+                    </button>
+                  ))}  
+
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Price:</h3>
+                <h3 className="text-lg font-semibold mb-2">Giá:</h3>
                 <div className="price">
-                  {selectedColor
-                    ? `$${
-                        productDetail.variations.find(
-                          (variation) => variation.color_type === selectedColor
-                        )?.price
-                      }`
-                    : `From $${minPrice} - $${maxPrice}`}
+                  {
+                    selectedSpecification?.price !== "0.00" ? (
+                      <>
+                        <span className="text-muted me-2">
+                          {selectedSpecification?.price} vnd
+                        </span>
+                        {/* <span className="text-danger">
+                          ${selectedSpecification?.price_sale}
+                        </span> */}
+                      </>
+                    ) : (
+                      <span>${selectedSpecification?.price} vnd</span>
+                    )
+                  }
                 </div>
                 {/* Add to Cart button and Quantity input */}
                 <div className="flex items-center mt-4">
@@ -336,7 +277,7 @@ const DetailProduct = () => {
                     className="bg-blue-500 text-black px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none"
                     onClick={addToCart}
                   >
-                    Add to Cart
+                    Thêm vào giỏ hàng
                   </button>
                 </div>
               </div>
@@ -383,16 +324,33 @@ const DetailProduct = () => {
               >
                 <div className="p-4 p-lg-12 bg-white">
                   <h6 className="fs-4 mb-4">Thông tin về sản phẩm này</h6>
-                  <p className="text-muted text-sm mb-0">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                    occaecat cupidatat non proident, sunt in culpa qui officia
-                    deserunt mollit anim id est laborum.
-                  </p>
+                  <p className="mb-4">
+                  <strong>Mô tả:</strong> {productDetail.description}
+                </p>
+                <h3 className="text-lg font-semibold mb-2">Thông số kỹ thuật:</h3>
+                <ul className="list-unstyled mb-4">
+                 <li>
+                    <strong>Thương hiệu:</strong> {productDetail.brandName}
+                 </li>
+                  <li>
+                    <strong>RAM:</strong> {productDetail.ram} GB
+                  </li>
+                  <li>
+                    <strong>Hệ điều hành:</strong> {productDetail.operatingSystem}
+                  </li>
+                  <li>
+                    <strong>Camera sau:</strong> {productDetail.mainCamera} MP
+                  </li>
+                  <li>
+                    <strong>Camera trước:</strong> {productDetail.selfieCamera} MP
+                  </li>
+                  <li>
+                    <strong>Dung lượng pin:</strong> {productDetail.batterySize} mAh
+                  </li>
+                  <li>
+                    <strong>Kích thước màn hình:</strong> {productDetail.screenSize} inches
+                  </li>
+                </ul>
                 </div>
               </div>
               <div
