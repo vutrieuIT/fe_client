@@ -7,6 +7,7 @@ import API_URL, { HOST } from "../../config/Api";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import CommentComponent from "../../components/CommentComponent";
 
 const DetailProduct = () => {
   const { id } = useParams();
@@ -15,14 +16,7 @@ const DetailProduct = () => {
   const userInfos = sessionStorage.getItem("userInfo");
 
   const auth_user = JSON.parse(userInfos);
-  // const type = useParams()['type'];
-  const path = "https://res.cloudinary.com/du06b9aap/image/upload/v1718469956/";
-  //   const [products, setProducts] = useState([]);
   const [productDetail, setProductDetail] = useState([]);
-
-  //   const [color, setColor] = useState("");
-  //   const dispatch = useDispatch();
-  //   const { add } = cartSlice.actions;
   // detail
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -104,20 +98,6 @@ const DetailProduct = () => {
     }
   };
 
-  useEffect(() => {
-    // Tính toán giá thấp nhất và cao nhất từ các variant
-    // let min = Number.MAX_VALUE;
-    // let max = 0;
-    // productDetail &&
-    //   productDetail.variations &&
-    //   productDetail.variations.forEach((variation) => {
-    //     if (parseInt(variation.price) < min) min = parseInt(variation.price);
-    //     if (parseInt(variation.price) > max) max = parseInt(variation.price);
-    //   });
-    // setMinPrice(min);
-    // setMaxPrice(max);
-  }, [productDetail]);
-
   const getRecommnedProduct = async () => {
     await axios
       .get(
@@ -137,13 +117,8 @@ const DetailProduct = () => {
     if (!productDetail.length) {
       getDetail(id);
 
-      // getSpecification(id);
     }
-    // const cachedProducts = JSON.parse(sessionStorage.getItem("products"));
-    // if (cachedProducts) {
-    //   setProducts(cachedProducts);
-    // }
-    // getRecommnedProduct();
+    getRecommnedProduct();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -397,6 +372,11 @@ const DetailProduct = () => {
                             dolore magna aliqua.
                           </p>
                         </div>
+                        <CommentComponent
+                          initialComment="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                          initialRating={4}
+                          commentor="Jane Doe"
+                        />
                       </div>
                     </div>
                   </div>
@@ -409,190 +389,11 @@ const DetailProduct = () => {
           </div>
         </div>
         {/* <!-- RELATED PRODUCTS--> */}
-        <h2 className="h5 text-uppercase mb-4">Related products</h2>
-        <div className="row">
-          {/* <!-- PRODUCT--> */}
-          <div className="col-lg-3 col-sm-6">
-            <div className="product text-center skel-loader">
-              <div className="d-block mb-3 position-relative">
-                <a className="d-block" href="detail.html">
-                  <img
-                    className="img-fluid w-100"
-                    src={`${path}product-1.jpg`}
-                    alt="..."
-                  />
-                </a>
-                <div className="product-overlay">
-                  <ul className="mb-0 list-inline">
-                    <li className="list-inline-item m-0 p-0">
-                      <a className="btn btn-sm btn-outline-dark" href="#!">
-                        <i className="far fa-heart"></i>
-                      </a>
-                    </li>
-                    <li className="list-inline-item m-0 p-0">
-                      <a className="btn btn-sm btn-dark" href="#!">
-                        Add to cart
-                      </a>
-                    </li>
-                    <li className="list-inline-item mr-0">
-                      <a
-                        className="btn btn-sm btn-outline-dark"
-                        href="#productView"
-                        data-bs-toggle="modal"
-                      >
-                        <i className="fas fa-expand"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <h6>
-                {" "}
-                <a className="reset-anchor" href="detail.html">
-                  Kui Ye Chen’s AirPods
-                </a>
-              </h6>
-              <p className="small text-muted">$250</p>
-            </div>
-          </div>
-          {/* <!-- PRODUCT--> */}
-          <div className="col-lg-3 col-sm-6">
-            <div className="product text-center skel-loader">
-              <div className="d-block mb-3 position-relative">
-                <a className="d-block" href="detail.html">
-                  <img
-                    className="img-fluid w-100"
-                    src={`${path}product-2.jpg`}
-                    alt="..."
-                  />
-                </a>
-                <div className="product-overlay">
-                  <ul className="mb-0 list-inline">
-                    <li className="list-inline-item m-0 p-0">
-                      <a className="btn btn-sm btn-outline-dark" href="#!">
-                        <i className="far fa-heart"></i>
-                      </a>
-                    </li>
-                    <li className="list-inline-item m-0 p-0">
-                      <a className="btn btn-sm btn-dark" href="#!">
-                        Add to cart
-                      </a>
-                    </li>
-                    <li className="list-inline-item mr-0">
-                      <a
-                        className="btn btn-sm btn-outline-dark"
-                        href="#productView"
-                        data-bs-toggle="modal"
-                      >
-                        <i className="fas fa-expand"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <h6>
-                {" "}
-                <a className="reset-anchor" href="detail.html">
-                  Air Jordan 12 gym red
-                </a>
-              </h6>
-              <p className="small text-muted">$300</p>
-            </div>
-          </div>
-          {/* <!-- PRODUCT--> */}
-          <div className="col-lg-3 col-sm-6">
-            <div className="product text-center skel-loader">
-              <div className="d-block mb-3 position-relative">
-                <a className="d-block" href="detail.html">
-                  <img
-                    className="img-fluid w-100"
-                    src={`${path}product-3.jpg`}
-                    alt="..."
-                  />
-                </a>
-                <div className="product-overlay">
-                  <ul className="mb-0 list-inline">
-                    <li className="list-inline-item m-0 p-0">
-                      <a className="btn btn-sm btn-outline-dark" href="#!">
-                        <i className="far fa-heart"></i>
-                      </a>
-                    </li>
-                    <li className="list-inline-item m-0 p-0">
-                      <a className="btn btn-sm btn-dark" href="#!">
-                        Add to cart
-                      </a>
-                    </li>
-                    <li className="list-inline-item mr-0">
-                      <a
-                        className="btn btn-sm btn-outline-dark"
-                        href="#productView"
-                        data-bs-toggle="modal"
-                      >
-                        <i className="fas fa-expand"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <h6>
-                {" "}
-                <a className="reset-anchor" href="detail.html">
-                  Cyan cotton t-shirt
-                </a>
-              </h6>
-              <p className="small text-muted">$25</p>
-            </div>
-          </div>
-          {/* <!-- PRODUCT--> */}
-          <div className="col-lg-3 col-sm-6">
-            <div className="product text-center skel-loader">
-              <div className="d-block mb-3 position-relative">
-                <a className="d-block" href="detail.html">
-                  <img
-                    className="img-fluid w-100"
-                    src={`${path}product-4.jpg`}
-                    alt="..."
-                  />
-                </a>
-                <div className="product-overlay">
-                  <ul className="mb-0 list-inline">
-                    <li className="list-inline-item m-0 p-0">
-                      <a className="btn btn-sm btn-outline-dark" href="#!">
-                        <i className="far fa-heart"></i>
-                      </a>
-                    </li>
-                    <li className="list-inline-item m-0 p-0">
-                      <a className="btn btn-sm btn-dark" href="#!">
-                        Add to cart
-                      </a>
-                    </li>
-                    <li className="list-inline-item mr-0">
-                      <a
-                        className="btn btn-sm btn-outline-dark"
-                        href="#productView"
-                        data-bs-toggle="modal"
-                      >
-                        <i className="fas fa-expand"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <h6>
-                {" "}
-                <a className="reset-anchor" href="detail.html">
-                  Timex Unisex Originals
-                </a>
-              </h6>
-              <p className="small text-muted">$351</p>
-            </div>
-          </div>
-        </div>
 
-        <h1>SẢN PHẨM GỢI Ý</h1>
+        <h2>SẢN PHẨM GỢI Ý</h2>
         <div className="row">
           {recommendProducts
-            .filter((p) => p.variations.length != 0)
+            .filter((p) => p.specifications.length != 0)
             .slice(0, 3)
             .map((product, index) => {
               return (
@@ -605,30 +406,30 @@ const DetailProduct = () => {
                     <div className="d-block mb-3 position-relative">
                       <Link
                         className="d-block"
-                        to={`/lazi-store/cua-hang/${product.product_id}`}
+                        to={`/lazi-store/cua-hang/${product.id}`}
                       >
                         <img
                           className="img-fluid w-100"
-                          src={product.variations[0].image_url}
+                          src={HOST + product.variants?.[0]?.images[0]}
                           alt="..."
                         />
                       </Link>
                       <div className="product-overlay">
                         <ul className="mb-0 list-inline">
-                          <li className="list-inline-item m-0 p-0">
+                          {/* <li className="list-inline-item m-0 p-0">
                             <a
                               className="btn btn-sm btn-outline-dark"
                               href="#!"
                             >
                               <i className="far fa-heart"></i>
                             </a>
-                          </li>
+                          </li> */}
                           <li className="list-inline-item m-0 p-0">
                             <a className="btn btn-sm btn-dark" href="#!">
-                              Add to cart
+                              Thêm vào giỏ hàng
                             </a>
                           </li>
-                          <li className="list-inline-item mr-0">
+                          {/* <li className="list-inline-item mr-0">
                             <a
                               className="btn btn-sm btn-outline-dark"
                               href="#productView"
@@ -636,7 +437,7 @@ const DetailProduct = () => {
                             >
                               <i className="fas fa-expand"></i>
                             </a>
-                          </li>
+                          </li> */}
                         </ul>
                       </div>
                     </div>
@@ -646,9 +447,6 @@ const DetailProduct = () => {
                         {product.name}
                       </a>
                     </h6>
-                    <p className="small text-muted">
-                      ${product.variations[0].price}
-                    </p>
                   </div>
                 </div>
               );
