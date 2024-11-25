@@ -2,7 +2,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import cartSlice from "../../state/cartSlice";
 import URL_PATH from '../../config/UrlPath';
-import { NumericFormat } from 'react-number-format';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import API_URL from '../../config/Api';
