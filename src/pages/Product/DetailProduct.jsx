@@ -28,28 +28,33 @@ const DetailProduct = () => {
   const [selectedSpecification, setSelectedSpecification] = useState({});
   const [listSpecificationColor, setListSpecificationColor] = useState([]);
   // ảnh được chọn
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedImage, setSelectedImage] = useState("");
 
   const handleColorClick = (colorType, variant) => {
     setSelectedColor(colorType);
+    variantImageRender(colorType)?.[0] && setSelectedImage(variantImageRender(colorType)?.[0]);
     setSelectedProduct(variant);
-    setQuantity(1);
+    setQuantity(1);  
   };
 
   const handleSpecificationClick = (specification) => {
     setSelectedSpecification(specification);
     setListSpecificationColor(specification.colorVariant);
     setSelectedColor(specification.colorVariant?.[0]?.color);
+    variantImageRender(specification.colorVariant?.[0]?.color)?.[0] && setSelectedImage(variantImageRender(specification.colorVariant?.[0]?.color)?.[0]);
+    
   };
 
   const getDetail = async (id) => {
     try {
-      const response = await axios.get(`${API_URL}/san-pham/${id}`);
-      const data = response.data;
-      setProductDetail(data);
-      setSelectedSpecification(data.specifications?.[0]);
-      setListSpecificationColor(data.specifications?.[0]?.colorVariant);
-      setSelectedColor(data.specifications?.[0]?.colorVariant?.[0]?.color);
+      await axios.get(`${API_URL}/san-pham/${id}`).then((response) => {
+        const data = response.data;
+        setProductDetail(data);
+        setSelectedSpecification(data.specifications?.[0]);
+        setListSpecificationColor(data.specifications?.[0]?.colorVariant);
+        setSelectedColor(data.specifications?.[0]?.colorVariant?.[0]?.color);
+        setSelectedImage(data.variants?.[0]?.images[0]);
+      });
     } catch (error) {
       console.log(error);
       return null;
@@ -116,7 +121,6 @@ const DetailProduct = () => {
   useEffect(() => {
     if (!productDetail.length) {
       getDetail(id);
-
     }
     getRecommnedProduct();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -173,7 +177,7 @@ const DetailProduct = () => {
                           >
                             <img
                               className="img-fluid object-fit-contain w-100"
-                              style={{maxHeight: "500px"}}
+                              style={{ maxHeight: "500px" }}
                               src={HOST + image}
                               alt={`Product variation ${index + 1}`}
                             />
