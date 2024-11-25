@@ -81,7 +81,7 @@ const DetailProduct = () => {
         product_id: selectedProduct.product_id,
         variant_id: selectedProduct.id,
         price: parseFloat(price), // Chuyển đổi sang kiểu số thực
-        user_id: auth_user[0].id, // Sử dụng auth_user từ context hoặc props
+        user_id: auth_user.id, // Sử dụng auth_user từ context hoặc props
       };
       console.log(payload);
       // Gửi request POST lên server

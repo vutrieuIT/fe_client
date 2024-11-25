@@ -32,7 +32,7 @@ function Cart(){
     
      const getCartsByUser = async () => {
          try {
-             const response = await axios.post(`${API_URL}/carts`, { user_id: auth_user[0].id });
+             const response = await axios.post(`${API_URL}/carts`, { user_id: auth_user.id });
              const cartsData = response.data;
              console.log("Carts:", cartsData);
              // Lưu dữ liệu carts vào state

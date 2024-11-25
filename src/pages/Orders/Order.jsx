@@ -12,7 +12,7 @@ const Order = () => {
         const userInfos = sessionStorage.getItem('userInfo');
         const auth_user = JSON.parse(userInfos);
         const response = await axios.post(`${API_URL}/order`, {
-          user_id: auth_user[0].id,
+          user_id: auth_user.id,
         });
         setOrders(response.data.orders);
         setLoading(false);

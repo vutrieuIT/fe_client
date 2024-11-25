@@ -150,7 +150,7 @@ function FormLogin() {
   useEffect(() => {
     if (success && !unSuccess) {
       setLoading(true);
-      sessionStorage.setItem("userInfo", JSON.stringify([dataUser]));
+      sessionStorage.setItem("userInfo", JSON.stringify(dataUser));
       sessionStorage.setItem("hasLogin", true);
       setTimeout(() => history.go(-1), 1500);
     }

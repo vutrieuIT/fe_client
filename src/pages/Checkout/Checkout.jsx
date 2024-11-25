@@ -27,7 +27,7 @@ const Checkout = () => {
       const userInfos = await sessionStorage.getItem("userInfo");
 
       if (userInfos) {
-        const auth_user = JSON.parse(userInfos)[0];
+        const auth_user = JSON.parse(userInfos);
         setFullName(auth_user.name);
         setEmail(auth_user.email);
       }
@@ -49,7 +49,7 @@ const Checkout = () => {
   const getCartsByUser = async () => {
     try {
       const response = await axios.post(`${API_URL}/carts`, {
-        user_id: auth_user[0].id,
+        user_id: auth_user.id,
       });
       const cartsData = response.data;
       console.log("Carts:", cartsData);
@@ -98,7 +98,7 @@ const Checkout = () => {
 
       // Tạo payload chứa thông tin người dùng và đơn hàng
       const payload = {
-        user_id: auth_user[0].id, // Lấy user_id từ context hoặc props
+        user_id: auth_user.id, // Lấy user_id từ context hoặc props
         full_name: fullName, // Lấy tên người dùng từ input
         phone_number: phoneNumber, // Lấy số điện thoại từ input
         address: address, // Lấy địa chỉ từ input

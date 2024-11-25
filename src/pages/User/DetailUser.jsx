@@ -1,5 +1,5 @@
 const DetailUser = () => {
-  const userInfo = JSON.parse(sessionStorage.getItem("userInfo"))[0];
+  const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
 
   return (
     <div className="d-flex flex-wrap justify-content-center">
