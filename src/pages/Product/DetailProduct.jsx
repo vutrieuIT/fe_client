@@ -32,17 +32,20 @@ const DetailProduct = () => {
 
   const handleColorClick = (colorType, variant) => {
     setSelectedColor(colorType);
-    variantImageRender(colorType)?.[0] && setSelectedImage(variantImageRender(colorType)?.[0]);
+    variantImageRender(colorType)?.[0] &&
+      setSelectedImage(variantImageRender(colorType)?.[0]);
     setSelectedProduct(variant);
-    setQuantity(1);  
+    setQuantity(1);
   };
 
   const handleSpecificationClick = (specification) => {
     setSelectedSpecification(specification);
     setListSpecificationColor(specification.colorVariant);
     setSelectedColor(specification.colorVariant?.[0]?.color);
-    variantImageRender(specification.colorVariant?.[0]?.color)?.[0] && setSelectedImage(variantImageRender(specification.colorVariant?.[0]?.color)?.[0]);
-    
+    variantImageRender(specification.colorVariant?.[0]?.color)?.[0] &&
+      setSelectedImage(
+        variantImageRender(specification.colorVariant?.[0]?.color)?.[0]
+      );
   };
 
   const getDetail = async (id) => {
@@ -116,6 +119,17 @@ const DetailProduct = () => {
       .catch((error) =>
         console.error("Error fetching recommended products:", error)
       );
+  };
+
+  // api xóa comment
+  const deleteComment = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/san-pham/comment/${id}`).then((response) => {
+        console.log(response);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -376,10 +390,18 @@ const DetailProduct = () => {
                             dolore magna aliqua.
                           </p>
                         </div>
+                      </div>
+                      <div className="d-flex">
                         <CommentComponent
-                          initialComment="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                          initialRating={4}
-                          commentor="Jane Doe"
+                          style={{ width: "100%" }}
+                          RatingDto={{
+                            username: "Jason Doe",
+                            comment:
+                              "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                            rating: 5,
+                            id: 1,
+                          }}
+                          onDeleteClick={deleteComment}
                         />
                       </div>
                     </div>
@@ -420,28 +442,11 @@ const DetailProduct = () => {
                       </Link>
                       <div className="product-overlay">
                         <ul className="mb-0 list-inline">
-                          {/* <li className="list-inline-item m-0 p-0">
-                            <a
-                              className="btn btn-sm btn-outline-dark"
-                              href="#!"
-                            >
-                              <i className="far fa-heart"></i>
-                            </a>
-                          </li> */}
                           <li className="list-inline-item m-0 p-0">
                             <a className="btn btn-sm btn-dark" href="#!">
                               Thêm vào giỏ hàng
                             </a>
                           </li>
-                          {/* <li className="list-inline-item mr-0">
-                            <a
-                              className="btn btn-sm btn-outline-dark"
-                              href="#productView"
-                              data-bs-toggle="modal"
-                            >
-                              <i className="fas fa-expand"></i>
-                            </a>
-                          </li> */}
                         </ul>
                       </div>
                     </div>
