@@ -124,9 +124,16 @@ const DetailProduct = () => {
   // api xóa comment
   const deleteComment = async (id) => {
     try {
-      await axios.delete(`${API_URL}/san-pham/comment/${id}`).then((response) => {
-        console.log(response);
-      });
+      const userInfos = JSON.parse(sessionStorage.getItem("userInfo"));
+      await axios
+        .delete(`${API_URL}/san-pham/comment/${id}`, {
+          headers: {
+            Authorization: `Bearer ${userInfos.token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+        });
     } catch (error) {
       console.log(error);
     }
@@ -399,7 +406,7 @@ const DetailProduct = () => {
                             comment:
                               "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                             rating: 5,
-                            id: 1,
+                            id: "100000000000000000000000",
                           }}
                           onDeleteClick={deleteComment}
                         />
