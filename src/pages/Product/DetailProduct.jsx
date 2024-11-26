@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-// import styles from "./styles.module.css";
-// import { useDispatch } from "react-redux";
-// import cartSlice from "../../state/cartSlice";
+import Button from "@mui/material/Button";
 import API_URL, { HOST } from "../../config/Api";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +27,8 @@ const DetailProduct = () => {
   const [listSpecificationColor, setListSpecificationColor] = useState([]);
   // ảnh được chọn
   const [selectedImage, setSelectedImage] = useState("");
+  // comment
+  const [comments, setComments] = useState([]);
 
   const handleColorClick = (colorType, variant) => {
     setSelectedColor(colorType);
@@ -121,6 +121,28 @@ const DetailProduct = () => {
       );
   };
 
+  // thêm comment
+ const addComment = () => {
+  const ratingDto = {
+    id: null,
+    productId: id,
+    userId: auth_user.id,
+    rating: 5,
+    comment: "",
+    username: auth_user.name,
+    isEditting: true,
+  };
+  setComments([ ratingDto,...comments ]);
+
+  console.log(comments, "comments");
+};
+
+  const cancleComment = () => {
+    const newComments = comments.filter((c) => c.id !== null);
+    setComments(newComments);
+  }
+
+
   // api xóa comment
   const deleteComment = async (id) => {
     try {
@@ -131,8 +153,8 @@ const DetailProduct = () => {
             Authorization: `Bearer ${userInfos.token}`,
           },
         })
-        .then((response) => {
-          console.log(response);
+        .then(() => {
+          getComments();
         });
     } catch (error) {
       console.log(error);
@@ -142,7 +164,7 @@ const DetailProduct = () => {
   // api save comment
   const saveComment = async (data) => {
     try {
-      const payload = { ...data, productId: id };
+      const payload = { ...data, productId: id, userId: auth_user.id, username: auth_user.name };
       const userInfos = JSON.parse(sessionStorage.getItem("userInfo"));
       const header = {
         headers: {
@@ -152,9 +174,21 @@ const DetailProduct = () => {
 
       await axios
         .post(`${API_URL}/san-pham/comment`, payload, header)
-        .then((response) => {
-          console.log(response);
+        .then(() => {
+          getComments();
         });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
+  const getComments = async () => {
+    try {
+      await axios.get(`${API_URL}/san-pham/comment/${id}`).then((response) => {
+        setComments(response.data);
+      });
     } catch (error) {
       console.log(error);
     }
@@ -165,6 +199,7 @@ const DetailProduct = () => {
       getDetail(id);
     }
     getRecommnedProduct();
+    getComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -376,21 +411,27 @@ const DetailProduct = () => {
               >
                 <div className="p-4 p-lg-5 bg-white">
                   <div className="row">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={addComment}
+                    >
+                      Thêm đánh giá
+                    </Button>
                     <div className="col-lg-12">
-                      <div className="d-flex">
-                        <CommentComponent
-                          style={{ width: "100%" }}
-                          RatingDto={{
-                            username: "Jason Doe",
-                            comment:
-                              "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                            rating: 5,
-                            id: "100000000000000000000000",
-                          }}
-                          onDeleteClick={deleteComment}
-                          onSaveClick={saveComment}
-                        />
-                      </div>
+                      {
+                        comments.map((comment, index) => (
+                          <div key={index} className="d-flex">
+                            <CommentComponent
+                              style={{ width: "100%" }}
+                              RatingDto={comment}
+                              onDeleteClick={deleteComment}
+                              onSaveClick={saveComment}
+                              onCancleClick={cancleComment}
+                            />
+                          </div>
+                        ))
+                      }
                     </div>
                   </div>
                 </div>

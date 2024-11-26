@@ -3,12 +3,17 @@ import Rating from "@mui/material/Rating";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 
-const CommentComponent = ({ RatingDto, onDeleteClick, onSaveClick }) => {
+const CommentComponent = ({
+  RatingDto,
+  onDeleteClick,
+  onSaveClick,
+  onCancleClick,
+}) => {
   const [comment, setComment] = useState(RatingDto?.comment);
   const [rating, setRating] = useState(RatingDto?.rating);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(RatingDto?.isEditting ?? false);
 
-  const userInformation = JSON.parse(localStorage.getItem("userInfo"));
+  const userInformation = JSON.parse(sessionStorage.getItem("userInfo"));
 
   const isOwner = RatingDto?.userId === userInformation?.id;
 
@@ -29,13 +34,14 @@ const CommentComponent = ({ RatingDto, onDeleteClick, onSaveClick }) => {
   };
 
   const handleSave = () => {
-    onSaveClick({id: RatingDto.id, rating, comment});
+    onSaveClick({ id: RatingDto.id, rating, comment });
     setIsEditing(false);
-  }
+  };
 
-  if (!RatingDto) {
-    RatingDto = {};
-  }
+  const handleCancle = () => {
+    onCancleClick();
+    setIsEditing(false);
+  };
 
   return (
     <div className="comment-component">
@@ -48,6 +54,7 @@ const CommentComponent = ({ RatingDto, onDeleteClick, onSaveClick }) => {
         onChange={(event, newRating) => {
           handleRatingChange(newRating);
         }}
+        readOnly={!isEditing}
       />
       {isEditing ? (
         <div>
@@ -58,9 +65,25 @@ const CommentComponent = ({ RatingDto, onDeleteClick, onSaveClick }) => {
       )}
       {isOwner && (
         <div className="comment-buttons">
-          <Button onClick={toggleEdit}>{isEditing ? "Cancel" : "Edit"}</Button>
-          <Button onClick={handleDelete}>Delete</Button>
-          {isEditing && <Button onClick={handleSave}>Save</Button>}
+          {isEditing ? (
+            <div>
+              <Button onClick={handleSave}>
+                Lưu
+              </Button>
+              <Button onClick={handleCancle}>
+                Hủy
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <Button onClick={toggleEdit}>
+                Cập nhật
+              </Button>
+              <Button onClick={handleDelete}>
+                Xóa
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -71,6 +94,7 @@ CommentComponent.propTypes = {
   RatingDto: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
   onSaveClick: PropTypes.func.isRequired,
+  onCancleClick: PropTypes.func.isRequired,
 };
 
 export default CommentComponent;
