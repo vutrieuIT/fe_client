@@ -67,21 +67,13 @@ const CommentComponent = ({
         <div className="comment-buttons">
           {isEditing ? (
             <div>
-              <Button onClick={handleSave}>
-                Lưu
-              </Button>
-              <Button onClick={handleCancle}>
-                Hủy
-              </Button>
+              <Button onClick={handleSave}>Lưu</Button>
+              <Button onClick={handleCancle}>Hủy</Button>
             </div>
           ) : (
             <div>
-              <Button onClick={toggleEdit}>
-                Cập nhật
-              </Button>
-              <Button onClick={handleDelete}>
-                Xóa
-              </Button>
+              <Button onClick={toggleEdit}>Cập nhật</Button>
+              <Button onClick={handleDelete}>Xóa</Button>
             </div>
           )}
         </div>

@@ -122,26 +122,25 @@ const DetailProduct = () => {
   };
 
   // thêm comment
- const addComment = () => {
-  const ratingDto = {
-    id: null,
-    productId: id,
-    userId: auth_user.id,
-    rating: 5,
-    comment: "",
-    username: auth_user.name,
-    isEditting: true,
-  };
-  setComments([ ratingDto,...comments ]);
+  const addComment = () => {
+    const ratingDto = {
+      id: null,
+      productId: id,
+      userId: auth_user.id,
+      rating: 5,
+      comment: "",
+      username: auth_user.name,
+      isEditting: true,
+    };
+    setComments([ratingDto, ...comments]);
 
-  console.log(comments, "comments");
-};
+    console.log(comments, "comments");
+  };
 
   const cancleComment = () => {
     const newComments = comments.filter((c) => c.id !== null);
     setComments(newComments);
-  }
-
+  };
 
   // api xóa comment
   const deleteComment = async (id) => {
@@ -164,7 +163,12 @@ const DetailProduct = () => {
   // api save comment
   const saveComment = async (data) => {
     try {
-      const payload = { ...data, productId: id, userId: auth_user.id, username: auth_user.name };
+      const payload = {
+        ...data,
+        productId: id,
+        userId: auth_user.id,
+        username: auth_user.name,
+      };
       const userInfos = JSON.parse(sessionStorage.getItem("userInfo"));
       const header = {
         headers: {
@@ -181,8 +185,6 @@ const DetailProduct = () => {
       console.log(error);
     }
   };
-
-
 
   const getComments = async () => {
     try {
@@ -419,19 +421,17 @@ const DetailProduct = () => {
                       Thêm đánh giá
                     </Button>
                     <div className="col-lg-12">
-                      {
-                        comments.map((comment, index) => (
-                          <div key={index} className="d-flex">
-                            <CommentComponent
-                              style={{ width: "100%" }}
-                              RatingDto={comment}
-                              onDeleteClick={deleteComment}
-                              onSaveClick={saveComment}
-                              onCancleClick={cancleComment}
-                            />
-                          </div>
-                        ))
-                      }
+                      {comments.map((comment, index) => (
+                        <div key={index} className="d-flex">
+                          <CommentComponent
+                            style={{ width: "100%" }}
+                            RatingDto={comment}
+                            onDeleteClick={deleteComment}
+                            onSaveClick={saveComment}
+                            onCancleClick={cancleComment}
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
