@@ -42,7 +42,7 @@ import Order from "./pages/Orders/Order";
               <Route path={URL_PATH.concat("/checkpayment")} element={<CheckPayment/>}/>
               <Route path="*" element={<Page403 />} />
               <Route path={URL_PATH.concat("/tien-hanh-dat-hang.html")} element={<AuthRoute element={Checkout} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
-              <Route path={URL_PATH.concat("/gio-hang.html")} element={<AuthRoute element={Cart} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
+              <Route path={URL_PATH.concat("/gio-hang")} element={<AuthRoute element={Cart} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
               <Route path={URL_PATH.concat("/lich-su.html")} element={<AuthRoute element={Order} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
               <Route path={URL_PATH.concat("/thong-tin-khach-hang.html")} element={<AuthRoute element={DetailUser} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
               <Route path={URL_PATH.concat("/dang-nhap.html")} element={<AuthRoute element={Login} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>

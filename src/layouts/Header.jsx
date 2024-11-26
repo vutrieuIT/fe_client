@@ -37,7 +37,7 @@ function Header() {
     {
       id: 1,
       name: "Giỏ hàng",
-      link: "/gio-hang.html",
+      link: "/gio-hang",
       icon: "fas fa-dolly-flatbed me-1 text-gray",
     },
     // {id:2, name:'Thông báo',link:'/thong-bao.html',icon:'far fa-heart me-1 text-gray'},

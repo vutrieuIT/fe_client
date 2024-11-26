@@ -113,7 +113,7 @@ const DetailProduct = () => {
           text: "You clicked the button!",
           icon: "success",
         });
-        navigate("/lazi-store/gio-hang.html");
+        navigate("/lazi-store/gio-hang");
       } else {
         console.log("Failed to add product to cart.");
       }
