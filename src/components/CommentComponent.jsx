@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import Rating from "@mui/material/Rating";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CommentComponent = ({
   RatingDto,
@@ -12,6 +12,12 @@ const CommentComponent = ({
   const [comment, setComment] = useState(RatingDto?.comment);
   const [rating, setRating] = useState(RatingDto?.rating);
   const [isEditing, setIsEditing] = useState(RatingDto?.isEditting ?? false);
+
+  useEffect(() => {
+    setComment(RatingDto?.comment);
+    setRating(RatingDto?.rating);
+    setIsEditing(RatingDto?.isEditting ?? false);
+  }, [RatingDto]);
 
   const userInformation = JSON.parse(sessionStorage.getItem("userInfo"));
 

@@ -133,8 +133,6 @@ const DetailProduct = () => {
       isEditting: true,
     };
     setComments([ratingDto, ...comments]);
-
-    console.log(comments, "comments");
   };
 
   const cancleComment = () => {
