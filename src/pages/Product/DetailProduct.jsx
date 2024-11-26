@@ -34,7 +34,13 @@ const DetailProduct = () => {
     setSelectedColor(colorType);
     variantImageRender(colorType)?.[0] &&
       setSelectedImage(variantImageRender(colorType)?.[0]);
-    setSelectedProduct(variant);
+    setSelectedProduct({
+      productId: productDetail.id,
+      color: colorType,
+      quantity: 1,
+      internalMemory: variant.internalMemory,
+      price: variant.price,
+    });
     setQuantity(1);
   };
 
@@ -46,6 +52,14 @@ const DetailProduct = () => {
       setSelectedImage(
         variantImageRender(specification.colorVariant?.[0]?.color)?.[0]
       );
+
+    setSelectedProduct({
+      productId: productDetail.id,
+      color: specification.colorVariant?.[0]?.color,
+      quantity: 1,
+      internalMemory: specification.internalMemory,
+      price: specification.price,
+    });
   };
 
   const getDetail = async (id) => {
@@ -57,6 +71,13 @@ const DetailProduct = () => {
         setListSpecificationColor(data.specifications?.[0]?.colorVariant);
         setSelectedColor(data.specifications?.[0]?.colorVariant?.[0]?.color);
         setSelectedImage(data.variants?.[0]?.images[0]);
+        setSelectedProduct({
+          productId: data.id,
+          color: data.specifications?.[0]?.colorVariant?.[0]?.color,
+          quantity: 1,
+          internalMemory: data.specifications?.[0]?.internalMemory,
+          price: data.specifications?.[0]?.price,
+        })
       });
     } catch (error) {
       console.log(error);
@@ -71,21 +92,16 @@ const DetailProduct = () => {
         console.log("Please select a product variant.");
         return;
       }
-      const price =
-        selectedProduct.price_sale !== "0.00"
-          ? selectedProduct.price_sale
-          : selectedProduct.price;
       // Tạo payload để gửi lên server
-      const payload = {
-        quantity: parseInt(quantity),
-        product_id: selectedProduct.product_id,
-        variant_id: selectedProduct.id,
-        price: parseFloat(price), // Chuyển đổi sang kiểu số thực
-        user_id: auth_user.id, // Sử dụng auth_user từ context hoặc props
+      const payload = selectedProduct;
+      // header token
+      const header = {
+        headers: {
+          Authorization: `Bearer ${auth_user.token}`,
+        },
       };
-      console.log(payload);
       // Gửi request POST lên server
-      const response = await axios.post(`${API_URL}/add-to-cart`, payload);
+      const response = await axios.post(`${API_URL}/add-to-cart`, payload, header);
 
       // Kiểm tra kết quả từ server
       if (response.status === 200) {
