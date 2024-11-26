@@ -23,7 +23,7 @@ function CheckPayment() {
       <div className="h-100 w-100 text-center">
         <h3 style={{ height: 500 }}>
           <p>
-            <Link className="text-decoration-underline fs-4" to={"/"}>
+            <Link className="text-decoration-underline fs-4" to={"/lazi-store/"}>
               Trở lại trang chủ
             </Link>
           </p>

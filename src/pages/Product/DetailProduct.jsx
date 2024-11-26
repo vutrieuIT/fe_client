@@ -36,6 +36,7 @@ const DetailProduct = () => {
       setSelectedImage(variantImageRender(colorType)?.[0]);
     setSelectedProduct({
       productId: productDetail.id,
+      productName: productDetail.name,
       color: colorType,
       quantity: 1,
       internalMemory: variant.internalMemory,
@@ -55,6 +56,7 @@ const DetailProduct = () => {
 
     setSelectedProduct({
       productId: productDetail.id,
+      productName: productDetail.name,
       color: specification.colorVariant?.[0]?.color,
       quantity: 1,
       internalMemory: specification.internalMemory,
@@ -73,6 +75,7 @@ const DetailProduct = () => {
         setSelectedImage(data.variants?.[0]?.images[0]);
         setSelectedProduct({
           productId: data.id,
+          productName: data.name,
           color: data.specifications?.[0]?.colorVariant?.[0]?.color,
           quantity: 1,
           internalMemory: data.specifications?.[0]?.internalMemory,
@@ -87,6 +90,8 @@ const DetailProduct = () => {
 
   const addToCart = async () => {
     try {
+
+      console.log("selectedProduct", selectedProduct);
       if (!selectedProduct) {
         // Nếu không có sản phẩm nào được chọn
         console.log("Please select a product variant.");
@@ -97,7 +102,7 @@ const DetailProduct = () => {
       // header token
       const header = {
         headers: {
-          Authorization: `Bearer ${auth_user.token}`,
+          Authorization: `Bearer ${auth_user?.token}`,
         },
       };
       // Gửi request POST lên server
@@ -109,8 +114,8 @@ const DetailProduct = () => {
         // Reset quantity sau khi thêm vào giỏ hàng
         setQuantity(0);
         await Swal.fire({
-          title: "Good job!",
-          text: "You clicked the button!",
+          title: "Thông báo",
+          text: "Thêm vào giỏ hàng thành công!",
           icon: "success",
         });
         navigate("/lazi-store/gio-hang");

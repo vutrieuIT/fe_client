@@ -42,7 +42,7 @@ function FormForgetPassword() {
       if (response.status === 200) {
         setSuccess(true);
         if(success){
-          navigate("/lazi-store/dang-nhap.html")
+          navigate("/lazi-store/dang-nhap")
         }
       }
     } catch (error) {

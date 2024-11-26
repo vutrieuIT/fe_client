@@ -30,8 +30,8 @@ function Header() {
     { id: 3, name: "Tin tức", link: "/tin-tuc.html" },
   ];
   const menuListLogin = [
-    { id: 1, name: "Đăng nhập", link: "/dang-nhap.html", show: true },
-    { id: 2, name: "Đăng ký", link: "/dang-ky.html", show: false },
+    { id: 1, name: "Đăng nhập", link: "/dang-nhap", show: true },
+    { id: 2, name: "Đăng ký", link: "/dang-ky", show: false },
   ];
   const menuRights = [
     {

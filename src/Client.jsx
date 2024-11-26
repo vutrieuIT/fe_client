@@ -45,8 +45,8 @@ import Order from "./pages/Orders/Order";
               <Route path={URL_PATH.concat("/gio-hang")} element={<AuthRoute element={Cart} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
               <Route path={URL_PATH.concat("/lich-su.html")} element={<AuthRoute element={Order} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
               <Route path={URL_PATH.concat("/thong-tin-khach-hang.html")} element={<AuthRoute element={DetailUser} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
-              <Route path={URL_PATH.concat("/dang-nhap.html")} element={<AuthRoute element={Login} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
-              <Route path={URL_PATH.concat("/dang-ky.html")} element={<AuthRoute element={Register} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
+              <Route path={URL_PATH.concat("/dang-nhap")} element={<AuthRoute element={Login} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
+              <Route path={URL_PATH.concat("/dang-ky")} element={<AuthRoute element={Register} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
             </Routes>
           </div>
           <Footer />

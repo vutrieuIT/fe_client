@@ -17,7 +17,7 @@ function Page403() {
         <h3 style={{ height: 500 }}>
           <p>
             Không tồn tại trang này.{" "}
-            <Link className="text-decoration-underline fs-4" to={"/"}>
+            <Link className="text-decoration-underline fs-4" to={"/lazi-store/"}>
               Trở lại trang chủ
             </Link>
           </p>
