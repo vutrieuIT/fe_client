@@ -1,12 +1,16 @@
 import PropTypes from "prop-types";
-import { FaEdit, FaTrash } from "react-icons/fa";
 import Rating from "@mui/material/Rating";
+import Button from "@mui/material/Button";
 import { useState } from "react";
 
-const CommentComponent = ({ RatingDto, onDeleteClick }) => {
+const CommentComponent = ({ RatingDto, onDeleteClick, onSaveClick }) => {
   const [comment, setComment] = useState(RatingDto?.comment);
   const [rating, setRating] = useState(RatingDto?.rating);
   const [isEditing, setIsEditing] = useState(false);
+
+  const userInformation = JSON.parse(localStorage.getItem("userInfo"));
+
+  const isOwner = RatingDto?.userId === userInformation?.id;
 
   const handleRatingChange = (newRating) => {
     setRating(newRating);
@@ -21,9 +25,17 @@ const CommentComponent = ({ RatingDto, onDeleteClick }) => {
   };
 
   const handleDelete = () => {
-    // Handle delete logic here
     onDeleteClick(RatingDto.id);
   };
+
+  const handleSave = () => {
+    onSaveClick({id: RatingDto.id, rating, comment});
+    setIsEditing(false);
+  }
+
+  if (!RatingDto) {
+    RatingDto = {};
+  }
 
   return (
     <div className="comment-component">
@@ -44,10 +56,13 @@ const CommentComponent = ({ RatingDto, onDeleteClick }) => {
       ) : (
         <p>{comment}</p>
       )}
-      <div className="comment-actions">
-        <FaEdit onClick={toggleEdit} />
-        <FaTrash onClick={handleDelete} />
-      </div>
+      {isOwner && (
+        <div className="comment-buttons">
+          <Button onClick={toggleEdit}>{isEditing ? "Cancel" : "Edit"}</Button>
+          <Button onClick={handleDelete}>Delete</Button>
+          {isEditing && <Button onClick={handleSave}>Save</Button>}
+        </div>
+      )}
     </div>
   );
 };
@@ -55,6 +70,7 @@ const CommentComponent = ({ RatingDto, onDeleteClick }) => {
 CommentComponent.propTypes = {
   RatingDto: PropTypes.object.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
+  onSaveClick: PropTypes.func.isRequired,
 };
 
 export default CommentComponent;

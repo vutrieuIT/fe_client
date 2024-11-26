@@ -139,6 +139,27 @@ const DetailProduct = () => {
     }
   };
 
+  // api save comment
+  const saveComment = async (data) => {
+    try {
+      const payload = { ...data, productId: id };
+      const userInfos = JSON.parse(sessionStorage.getItem("userInfo"));
+      const header = {
+        headers: {
+          Authorization: `Bearer ${userInfos.token}`,
+        },
+      };
+
+      await axios
+        .post(`${API_URL}/san-pham/comment`, payload, header)
+        .then((response) => {
+          console.log(response);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (!productDetail.length) {
       getDetail(id);
@@ -356,48 +377,6 @@ const DetailProduct = () => {
                 <div className="p-4 p-lg-5 bg-white">
                   <div className="row">
                     <div className="col-lg-12">
-                      <div className="d-flex mb-5">
-                        <div className="flex-shrink-0">
-                          <img
-                            className="rounded-circle"
-                            src={`https://i.pravatar.cc/100?u=1`}
-                            alt=""
-                            width="50"
-                          />
-                        </div>
-                        <div className="ms-3 flex-shrink-1">
-                          <h6 className="mb-0 text-uppercase">Jason Doe</h6>
-                          <p className="small text-muted mb-0 text-uppercase">
-                            20 May 2020
-                          </p>
-                          <p className="text-sm mb-0 text-muted">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="d-flex">
-                        <div className="flex-shrink-0">
-                          <img
-                            className="rounded-circle"
-                            src={`https://i.pravatar.cc/100?u=2`}
-                            alt=""
-                            width="50"
-                          />
-                        </div>
-                        <div className="ms-3 flex-shrink-1">
-                          <h6 className="mb-0 text-uppercase">Jane Doe</h6>
-                          <p className="small text-muted mb-0 text-uppercase">
-                            20 May 2020
-                          </p>
-                          <p className="text-sm mb-0 text-muted">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua.
-                          </p>
-                        </div>
-                      </div>
                       <div className="d-flex">
                         <CommentComponent
                           style={{ width: "100%" }}
@@ -409,6 +388,7 @@ const DetailProduct = () => {
                             id: "100000000000000000000000",
                           }}
                           onDeleteClick={deleteComment}
+                          onSaveClick={saveComment}
                         />
                       </div>
                     </div>
