@@ -90,8 +90,15 @@ const DetailProduct = () => {
 
   const addToCart = async () => {
     try {
-
-      console.log("selectedProduct", selectedProduct);
+      if (auth_user == null) {
+        // Nếu chưa đăng nhập
+        Swal.fire({
+          title: "Thông báo",
+          text: "Vui lòng đăng nhập",
+        icon: "warning",
+        });
+        navigate("/lazi-store/dang-nhap");
+      }
       if (!selectedProduct) {
         // Nếu không có sản phẩm nào được chọn
         console.log("Please select a product variant.");
