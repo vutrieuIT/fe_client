@@ -161,7 +161,7 @@ function Cart() {
         <th className="ps-0 py-3 border-light" scope="row">
           <div className="d-flex align-items-center">
             {/* Render image and name here */}
-            {item.productName} - {item.variation_color}
+            {item.productName} - {item.color}
           </div>
         </th>
         <td className="p-3 align-middle border-light">
