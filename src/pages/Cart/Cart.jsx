@@ -12,6 +12,12 @@ function Cart() {
 
   const userInfos = sessionStorage.getItem("userInfo");
   const auth_user = JSON.parse(userInfos);
+
+  const header = {
+    headers: {
+      Authorization: `Bearer ${auth_user.token}`,
+    },
+  };
   //Sử dụng redux
   const dispatch = useDispatch();
   // Biến lưu trữ thông tin sản phẩm
@@ -93,7 +99,7 @@ function Cart() {
       await axios.put(`${API_URL}/cart`, carts, header);
 
       // Sau khi xóa thành công, cập nhật lại danh sách giỏ hàng bằng cách gọi lại hàm để lấy dữ liệu mới
-      getCartsByUser();
+      await getCartsByUser();
 
       // Hiển thị thông báo hoặc thực hiện các thao tác cần thiết sau khi xóa thành công
       console.log("Item removed from cart successfully!");
@@ -106,16 +112,21 @@ function Cart() {
   // Hàm để tăng số lượng quantity của một mục trong giỏ hàng
   const increaseQuantity = async (item) => {
     try {
-      // Gọi API để cập nhật số lượng quantity
-      const response = await axios.put(`${API_URL}/carts/${item.id}`, {
-        quantity: item.quantity + 1,
+      const findItem = carts.find((cart) => {
+        return cart.productId === item.productId && cart.internalMemory === item.internalMemory && cart.color === item.color;
       });
+      if (findItem) {
+        findItem.quantity += 1;
+      }
+
+      // Gọi API để cập nhật số lượng quantity
+      const response = await axios.put(`${API_URL}/cart`, carts, header);
 
       // Kiểm tra kết quả từ server
       if (response.status === 200) {
         console.log("Quantity increased successfully!");
         // Gọi hàm để cập nhật lại danh sách carts sau khi thay đổi
-        getCartsByUser();
+       await getCartsByUser();
       }
     } catch (error) {
       console.error("Error while increasing quantity:", error);
@@ -131,28 +142,39 @@ function Cart() {
       }
 
       // Gọi API để cập nhật số lượng quantity
-      const response = await axios.put(`${API_URL}/carts/${item.id}`, {
-        quantity: item.quantity - 1,
+      const findItem = carts.find((cart) => {
+        return cart.productId === item.productId && cart.internalMemory === item.internalMemory && cart.color === item.color;
       });
+      if (findItem) {
+        findItem.quantity -= 1;
+      }
+      const response =  await axios.put(`${API_URL}/cart`, carts, header);
 
       // Kiểm tra kết quả từ server
       if (response.status === 200) {
         console.log("Quantity decreased successfully!");
         // Gọi hàm để cập nhật lại danh sách carts sau khi thay đổi
-        getCartsByUser();
+       await getCartsByUser();
       }
     } catch (error) {
       console.error("Error while decreasing quantity:", error);
     }
   };
+
+  const handleSetQuantity = (item, quantity) => {
+    const findItem = carts.find((cart) => {
+      return cart.productId === item.productId && cart.internalMemory === item.internalMemory && cart.color === item.color;
+    });
+    if (findItem) {
+      findItem.quantity = quantity;
+    }
+  };
+
   const handleCheckout = () => {
     // Thực hiện chuyển hướng đến trang "/tien-hanh-dat-hang.html"
     navigate("./../tien-hanh-dat-hang.html");
   };
   const itemCart = carts.map((item) => {
-    const price = parseFloat(item.price)
-      .toFixed(1)
-      .replace(/\d(?=(\d{3})+\.)/g, "$&,");
     return (
       <tr key={item.id}>
         <th className="p-3 align-middle border-light">
@@ -164,19 +186,22 @@ function Cart() {
             {item.productName} - {item.color}
           </div>
         </th>
+        <th className="ps-0 py-3 border-light" scope="row">
+          <div className="d-flex align-items-center">
+            {/* Render image and name here */}
+            {item.internalMemory} GB
+          </div>
+        </th>
         <td className="p-3 align-middle border-light">
           <div className="mb-0">
             <p className="fw-bold text-secondary p-0 m-0">
-              ${item.price}
+              {item.price} VND
               <span className="text-small"></span>
             </p>
           </div>
         </td>
         <td className="p-3 align-middle border-light">
           <div className="border d-flex align-items-center justify-content-between px-3">
-            <span className="small text-uppercase text-gray headings-font-family">
-              Số lượng
-            </span>
             <div className="quantity">
               <button className="dec-btn p-0">
                 <i
@@ -188,7 +213,7 @@ function Cart() {
                 className="form-control form-control-sm border-0 shadow-0 p-0"
                 type="text"
                 value={item.quantity}
-                onChange={() => {}}
+                onChange={() => handleSetQuantity(item, item.quantity)}
               />
               <button className="inc-btn p-0">
                 <i
@@ -201,7 +226,7 @@ function Cart() {
         </td>
         <td className="p-3 align-middle border-light">
           <p className="mb-0 small">
-            ${Math.floor(item.price * item.quantity)}
+            {Math.floor(item.price * item.quantity)} VND
           </p>
         </td>
         <td className="p-3 align-middle border-light">
@@ -263,6 +288,10 @@ function Cart() {
                         <strong className="text-sm text-uppercase">
                           Tên sản phẩm
                         </strong>
+                      </th>
+                      <th className="border-0 p-3" scope="col">
+                        {" "}
+                        <strong className="text-sm text-uppercase">Dung lượng</strong>
                       </th>
                       <th className="border-0 p-3" scope="col">
                         {" "}
@@ -348,7 +377,7 @@ function Cart() {
                         Tạm tính
                       </strong>
                       <span className="text-muted small">
-                        ${totalCartPrice}
+                        {totalCartPrice} VND
                       </span>
                     </li>
                     <li className="border-bottom my-2"></li>
@@ -356,7 +385,7 @@ function Cart() {
                       <strong className="text-uppercase small font-weight-bold">
                         Tổng cộng
                       </strong>
-                      <span>${totalCartPrice}</span>
+                      <span>{totalCartPrice} VND</span>
                     </li>
                     {countCart > 0 && (
                       <li>
