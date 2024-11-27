@@ -32,9 +32,9 @@ function CheckPayment() {
               <div className={`fixed inset-0 flex items-center justify-center z-50 ${'pointer-events-none'}`}>
                
                 <div className="bg-white p-8 rounded-lg shadow-md max-w-md">
-                  <h2 className="text-xl font-semibold mb-4">Payment Successful!</h2>
+                  <h2 className="text-xl font-semibold mb-4">Thông báo!</h2>
                   <p className="text-gray-700 mb-4">
-                    Thank you for your payment. Your transaction has been completed successfully.
+                    Thanh toán thành công. Cảm ơn bạn đã mua hàng!
                   </p>
                 </div>
               </div>
@@ -44,8 +44,10 @@ function CheckPayment() {
               <div className={`fixed inset-0 flex items-center justify-center z-50 ${'pointer-events-none'}`}>
               
                 <div className="bg-white p-8 rounded-lg shadow-md max-w-md">
-                  <h2 className="text-xl font-semibold mb-4">Payment Failed!</h2>
-                  <p className="text-gray-700 mb-4">Payment unsuccessful. Please try again.</p>
+                  <h2 className="text-xl font-semibold mb-4">Thông báo!</h2>
+                  <p className="text-gray-700 mb-4">
+                    Thanh toán thất bại. Vui lòng thử lại!
+                  </p>
                 </div>
               </div>
             </p>

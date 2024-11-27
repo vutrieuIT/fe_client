@@ -46,6 +46,12 @@ const Checkout = () => {
   const userInfos = sessionStorage.getItem("userInfo");
   const auth_user = JSON.parse(userInfos);
 
+  const header = {
+    headers: {
+      Authorization: `Bearer ${auth_user.token}`,
+    },
+  }
+
   const getCartsByUser = async () => {
     try {
       const response = await axios.post(`${API_URL}/carts`, {
@@ -106,7 +112,7 @@ const Checkout = () => {
       };
 
       // Gửi request POST đến API để thực hiện thanh toán
-      const response = await axios.post(`${API_URL}/checkout`, payload);
+      const response = await axios.post(`${API_URL}/checkout`, payload, header);
 
       // Kiểm tra kết quả từ server
       if (response.status === 200) {

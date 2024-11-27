@@ -171,8 +171,8 @@ function Cart() {
   };
 
   const handleCheckout = () => {
-    // Thực hiện chuyển hướng đến trang "/tien-hanh-dat-hang.html"
-    navigate("./../tien-hanh-dat-hang.html");
+    // Thực hiện chuyển hướng đến trang "/tien-hanh-dat-hang"
+    navigate("./../tien-hanh-dat-hang");
   };
   const itemCart = carts.map((item) => {
     return (
@@ -354,7 +354,7 @@ function Cart() {
                     <div className="col-md-6 text-md-end">
                       <Link
                         className="btn btn-outline-dark btn-sm"
-                        to={"/" + URL_PATH + "/tien-hanh-dat-hang.html"}
+                        to={"/" + URL_PATH + "/tien-hanh-dat-hang"}
                       >
                         Tiến hành đặt hàng
                         <i className="fas fa-long-arrow-alt-right ms-2"></i>
