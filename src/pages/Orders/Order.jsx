@@ -40,35 +40,38 @@ const Order = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-2xl font-bold mb-4">Orders</h2>
+      <h2 className="text-2xl font-bold mb-4">Đơn hàng</h2>
       {loading ? (
         <p>Loading...</p>
       ) : (
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              <th className="border border-gray-300 px-4 py-2">Order Number</th>
-              <th className="border border-gray-300 px-4 py-2">Full Name</th>
-              <th className="border border-gray-300 px-4 py-2">Phone Number</th>
-              <th className="border border-gray-300 px-4 py-2">Address</th>
-              <th className="border border-gray-300 px-4 py-2">Date Created</th>
-              <th className="border border-gray-300 px-4 py-2">Time Created</th>
-              <th className="border border-gray-300 px-4 py-2">Status</th>
+              <th className="border border-gray-300 px-4 py-2">Mã đơn hàng</th>
+              <th className="border border-gray-300 px-4 py-2">Số điện thoại</th>
+              <th className="border border-gray-300 px-4 py-2">Địa chỉ</th>
+              <th className="border border-gray-300 px-4 py-2">Thời gian tạo</th>
+              <th className="border border-gray-300 px-4 py-2">Trạng thái</th>
+              <th className="border border-gray-300 px-4 py-2"></th>
             </tr>
           </thead>
           <tbody>
             {orders.map(order => (
               <tr key={order.id}>
-                <td className="border border-gray-300 px-4 py-2">{order.order_number}</td>
-                <td className="border border-gray-300 px-4 py-2">{order.full_name}</td>
-                <td className="border border-gray-300 px-4 py-2">{order.phone_number}</td>
-                <td className="border border-gray-300 px-4 py-2">{order.address}</td>
-                <td className="border border-gray-300 px-4 py-2">{order.date_create}</td>
-                <td className="border border-gray-300 px-4 py-2">{order.time_create}</td>
+                <td className="border border-gray-300 px-4 py-2">{order.id}</td>
+                <td className="border border-gray-300 px-4 py-2">{order.phoneNumber}</td>
+                <td className="border border-gray-300 px-4 py-2">{order.toAddress}</td>
+                <td className="border border-gray-300 px-4 py-2">{order.createdAt}</td>
                 <td className={`border border-gray-300 px-4 py-2 ${getStatusColor(order.status)}`}>
-                  {order.status === 'pending' && 'Đang chờ xác nhận'}
-                  {order.status === 'unpaid' && 'Chưa thanh toán'}
-                  {order.status === 'paid' && 'Đã thanh toán'}
+                  {order.status}
+                </td>
+                <td>
+                  <button>
+                    Xem chi tiết
+                  </button>
+                  <button>
+                    Thanh toán
+                  </button>
                 </td>
               </tr>
             ))}
