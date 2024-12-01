@@ -54,9 +54,7 @@ const Checkout = () => {
 
   const getCartsByUser = async () => {
     try {
-      const response = await axios.post(`${API_URL}/carts`, {
-        user_id: auth_user.id,
-      });
+      const response = await axios.get(`${API_URL}/cart`, header);
       const cartsData = response.data;
       console.log("Carts:", cartsData);
       // Lưu dữ liệu carts vào state
@@ -388,7 +386,7 @@ const Checkout = () => {
                         >
                           {/* Hiển thị tên sản phẩm và màu sắc biến thể */}
                           <strong className="small fw-bold">
-                            {cartItem.product_name} - {cartItem.variation_color}{" "}
+                            {cartItem.productName} - {cartItem.color}{" "} - {cartItem.internalMemory}GB
                             x {cartItem.quantity}{" "}
                           </strong>
                           {/* Hiển thị giá sản phẩm */}
