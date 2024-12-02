@@ -12,7 +12,7 @@ function FormSearch() {
     e.preventDefault();
     // Navigate to cua-hang.html with search query parameter
    
-    navigate(`/lazi-store/cua-hang.html?search=${searchTerm}`);
+    navigate(`/lazi-store/cua-hang?search=${searchTerm}`);
 
   };
 
