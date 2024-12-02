@@ -228,8 +228,9 @@ const DetailProduct = () => {
     }
     getRecommnedProduct();
     getComments();
+    window.scrollTo(0, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   // render giao diện
   const variantImageRender = (color) => {
@@ -474,7 +475,7 @@ const DetailProduct = () => {
         <div className="row">
           {recommendProducts
             .filter((p) => p.specifications.length != 0)
-            .slice(0, 3)
+            .slice(0, 4)
             .map((product, index) => {
               return (
                 <div
