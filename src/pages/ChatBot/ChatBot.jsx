@@ -5,6 +5,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [tempMessage, setTempMessage] = useState("");
 
   const token = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -14,48 +15,65 @@ const ChatBot = () => {
     },
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!userInput.trim()) return;
 
     const newMessages = [...messages, { role: "user", content: userInput }];
     setMessages(newMessages);
     setUserInput("");
     setIsLoading(true);
+    setTempMessage("AI is thinking...");
 
-    axios
-      .post(
+    try {
+      const response = await axios.post(
         "https://ai.runsystem.work/api/v1/chat/completions",
         {
           model: "gpt-3.5-turbo",
           messages: newMessages,
         },
         header
-      )
-      .then((res) => {
-        const response = res.data;
+      );
+      const assistantResponse = response.data.choices[0].message.content;
+      renderWordByWord(assistantResponse, newMessages);
+    } catch (error) {
+      setMessages([
+        ...newMessages,
+        {
+          role: "assistant",
+          content: "Sorry, I am not available right now.",
+        },
+      ]);
+      setIsLoading(false);
+      setTempMessage("");
+    }
+  };
+
+  const renderWordByWord = (response, newMessages) => {
+    const words = response.split(" ");
+    let currentMessage = "";
+
+    const updateMessage = (index) => {
+      if (index < words.length) {
+        currentMessage += (index === 0 ? "" : " ") + words[index];
+        setTempMessage(currentMessage);
+        setTimeout(() => updateMessage(index + 1), 100); // Adjust speed here
+      } else {
         setMessages([
           ...newMessages,
-          {
-            role: "assistant",
-            content: response.choices[0].message.content,
-          },
+          { role: "assistant", content: currentMessage },
         ]);
-      })
-      .catch(() => {
-        setMessages([
-          ...newMessages,
-          {
-            role: "assistant",
-            content: "Sorry, I am not available right now.",
-          },
-        ]);
-      })
-      .finally(() => setIsLoading(false));
+        setTempMessage("");
+        setIsLoading(false);
+      }
+    };
+
+    updateMessage(0);
   };
 
   const handleClearContext = () => {
     setMessages([]);
     setUserInput("");
+    setTempMessage("");
     setIsLoading(false);
   };
 
@@ -77,7 +95,7 @@ const ChatBot = () => {
               {message.content}
             </div>
           ))}
-          {isLoading && (
+          {tempMessage && (
             <div
               style={{
                 ...styles.message,
@@ -86,7 +104,7 @@ const ChatBot = () => {
                 fontStyle: "italic",
               }}
             >
-              AI is thinking...
+              {tempMessage}
             </div>
           )}
         </div>
