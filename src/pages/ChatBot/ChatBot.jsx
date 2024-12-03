@@ -4,6 +4,7 @@ import axios from "axios";
 const ChatBot = () => {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const token = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -17,37 +18,45 @@ const ChatBot = () => {
     if (!userInput.trim()) return;
 
     const newMessages = [...messages, { role: "user", content: userInput }];
+    setMessages(newMessages);
     setUserInput("");
-    try {
-      axios
-        .post(
-          "https://ai.runsystem.work/api/v1/chat/completions",
+    setIsLoading(true);
+
+    axios
+      .post(
+        "https://ai.runsystem.work/api/v1/chat/completions",
+        {
+          model: "gpt-3.5-turbo",
+          messages: newMessages,
+        },
+        header
+      )
+      .then((res) => {
+        const response = res.data;
+        setMessages([
+          ...newMessages,
           {
-            model: "gpt-3.5-turbo",
-            messages: newMessages,
-          },
-          header
-        )
-        .then((res) => {
-          const response = res.data;
-          newMessages.push({
             role: "assistant",
             content: response.choices[0].message.content,
-          });
-          setMessages(newMessages);
-        });
-    } catch (error) {
-      newMessages.push({
-        role: "assistant",
-        content: "Sorry, I am not available right now.",
-      });
-      setMessages(newMessages);
-    }
+          },
+        ]);
+      })
+      .catch(() => {
+        setMessages([
+          ...newMessages,
+          {
+            role: "assistant",
+            content: "Sorry, I am not available right now.",
+          },
+        ]);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const handleClearContext = () => {
     setMessages([]);
     setUserInput("");
+    setIsLoading(false);
   };
 
   return (
@@ -68,6 +77,18 @@ const ChatBot = () => {
               {message.content}
             </div>
           ))}
+          {isLoading && (
+            <div
+              style={{
+                ...styles.message,
+                alignSelf: "flex-start",
+                backgroundColor: "#f1f0f0",
+                fontStyle: "italic",
+              }}
+            >
+              AI is thinking...
+            </div>
+          )}
         </div>
         <div style={styles.inputContainer}>
           <input
@@ -78,8 +99,8 @@ const ChatBot = () => {
             onChange={(e) => setUserInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
           />
-          <button style={styles.button} onClick={handleSendMessage}>
-            Send
+          <button style={styles.button} onClick={handleSendMessage} disabled={isLoading}>
+            {isLoading ? "Sending..." : "Send"}
           </button>
           <button style={styles.clearButton} onClick={handleClearContext}>
             Clear
