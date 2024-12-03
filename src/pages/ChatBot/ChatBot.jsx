@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../../config/Api";
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [tempMessage, setTempMessage] = useState("");
+  const [product, setProduct] = useState([]);
 
   const token = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -14,6 +16,29 @@ const ChatBot = () => {
       Authorization: "Bearer " + token,
     },
   };
+
+  const getProduct = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/san-pham/chatbot`);
+      const productList = response.data.map(
+        (product) => JSON.stringify(product)
+      );
+      setProduct(productList);
+      const initMessages = {
+        role: "system",
+        content: `You are an saler. Here's the list of products in shop: ${productList.join(
+          ", "
+        )}`,
+      };
+      setMessages([initMessages]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getProduct();
+  }, []);
 
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
@@ -71,18 +96,20 @@ const ChatBot = () => {
   };
 
   const handleClearContext = () => {
-    setMessages([]);
+    setMessages(messages.filter((message) => message.role === "system"));
     setUserInput("");
     setTempMessage("");
     setIsLoading(false);
   };
 
   return (
-    <div className="d-flex flex-column align-items-center">
-      <h2>Chatbot</h2>
-      <div style={styles.container}>
-        <div style={styles.chatWindow}>
-          {messages.map((message, index) => (
+  <div className="d-flex flex-column align-items-center">
+    <h2>Chatbot</h2>
+    <div style={styles.container}>
+      <div style={styles.chatWindow}>
+        {messages
+          .filter((message) => message.role !== "system") // Lọc bỏ role system
+          .map((message, index) => (
             <div
               key={index}
               style={{
@@ -95,38 +122,38 @@ const ChatBot = () => {
               {message.content}
             </div>
           ))}
-          {tempMessage && (
-            <div
-              style={{
-                ...styles.message,
-                alignSelf: "flex-start",
-                backgroundColor: "#f1f0f0",
-                fontStyle: "italic",
-              }}
-            >
-              {tempMessage}
-            </div>
-          )}
-        </div>
-        <div style={styles.inputContainer}>
-          <input
-            style={styles.input}
-            type="text"
-            placeholder="Type your message..."
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-          />
-          <button style={styles.button} onClick={handleSendMessage} disabled={isLoading}>
-            {isLoading ? "Sending..." : "Send"}
-          </button>
-          <button style={styles.clearButton} onClick={handleClearContext}>
-            Clear
-          </button>
-        </div>
+        {tempMessage && (
+          <div
+            style={{
+              ...styles.message,
+              alignSelf: "flex-start",
+              backgroundColor: "#f1f0f0",
+              fontStyle: "italic",
+            }}
+          >
+            {tempMessage}
+          </div>
+        )}
+      </div>
+      <div style={styles.inputContainer}>
+        <input
+          style={styles.input}
+          type="text"
+          placeholder="Type your message..."
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+        />
+        <button style={styles.button} onClick={handleSendMessage} disabled={isLoading}>
+          {isLoading ? "Sending..." : "Send"}
+        </button>
+        <button style={styles.clearButton} onClick={handleClearContext}>
+          Clear
+        </button>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 const styles = {
