@@ -37,6 +37,11 @@ const ChatBot = () => {
     }
   };
 
+  const handleClearContext = () => {
+    setMessages([]);
+    setUserInput('');
+};
+
 
   return (
     <div className='d-flex flex-column align-items-center'>
@@ -68,6 +73,9 @@ const ChatBot = () => {
         <button style={styles.button} onClick={handleSendMessage}>
           Send
         </button>
+        <button style={styles.clearButton} onClick={handleClearContext}>
+        Clear
+      </button>
       </div>
     </div>
     </div>
@@ -116,6 +124,15 @@ const styles = {
     padding: '10px 20px',
     fontSize: '16px',
     backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  clearButton: {
+    padding: '10px 20px',
+    margin: '0 10px',
+    backgroundColor: '#dc3545',
     color: '#fff',
     border: 'none',
     borderRadius: '4px',
