@@ -19,7 +19,6 @@ import DetailUser from "./pages/User/DetailUser";
 import OrderUser from "./pages/User/OrderUser";
 import CheckPayment from "./pages/checkpayment/payment";
 import Order from "./pages/Orders/Order";
-import Chatbot from "./pages/ChatBot/ChatBot";
 'use client'
 
  function Client(){
@@ -41,7 +40,6 @@ import Chatbot from "./pages/ChatBot/ChatBot";
               <Route path={URL_PATH.concat("/tin-tuc/:danh-muc/:slug")} element={<DetailBlog />} />
               <Route path={URL_PATH.concat("/quen-mat-khau")} element={<ForgetPassword/>}/>
               <Route path={URL_PATH.concat("/checkpayment")} element={<CheckPayment/>}/>
-              <Route path={URL_PATH.concat("/chatbot")} element={<Chatbot/>}/>
               <Route path="*" element={<Page403 />} />
               <Route path={URL_PATH.concat("/tien-hanh-dat-hang")} element={<AuthRoute element={Checkout} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
               <Route path={URL_PATH.concat("/gio-hang")} element={<AuthRoute element={Cart} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
