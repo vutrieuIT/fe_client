@@ -11,7 +11,6 @@ import Checkout from "./pages/Checkout/Checkout";
 import ForgetPassword from "./pages/ForgetPassword/ForgetPassword";
 import Blog from "./pages/Blog/Blog";
 import Page403 from './pages/Admin/400/Page403';
-import DetailBlog from "./pages/Blog/DetailBlog";
 import Contact from "./pages/FAQ/Contact";
 import URL_PATH from "./config/UrlPath";
 import AuthRoute from "./Auth/AuthRoute";
@@ -35,10 +34,7 @@ import ChatBot from "./pages/ChatBot/ChatBot";
               <Route path={URL_PATH.concat("/lien-he.html")} element={<Contact />} />
               <Route path={URL_PATH.concat("/cua-hang")} element={<Product />} />
               <Route path={URL_PATH.concat("/tin-tuc.html")} element={<Blog />} />
-              <Route path={URL_PATH.concat("/cua-hang/:slug.html")} element={<DetailProduct />} />
               <Route path={URL_PATH.concat("/cua-hang/:id")} element={<DetailProduct />} />
-              <Route path={URL_PATH.concat("/tin-tuc/:slug")} element={<DetailBlog />} />
-              <Route path={URL_PATH.concat("/tin-tuc/:danh-muc/:slug")} element={<DetailBlog />} />
               <Route path={URL_PATH.concat("/quen-mat-khau")} element={<ForgetPassword/>}/>
               <Route path={URL_PATH.concat("/checkpayment")} element={<CheckPayment/>}/>
               <Route path={URL_PATH.concat("/chatbot")} element={<ChatBot/>}/>

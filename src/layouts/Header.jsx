@@ -26,9 +26,7 @@ function Header() {
   };
   const menuLefts = [
     { id: 1, name: "Trang chủ", link: "/" },
-    { id: 2, name: "Danh mục", link: "/cua-hang" },
-    { id: 3, name: "Tin tức", link: "/tin-tuc.html" },
-    { id: 4, name: "ChatBot", link: "/chatBot" },
+    { id: 2, name: "ChatBot", link: "/chatBot" },
   ];
   const menuListLogin = [
     { id: 1, name: "Đăng nhập", link: "/dang-nhap", show: true },
