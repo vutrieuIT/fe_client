@@ -19,7 +19,7 @@ const DetailProduct = () => {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   // add to cart
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   // recommend product
   const [recommendProducts, setRecommendProducts] = useState([]);
   // selected specification
@@ -38,11 +38,10 @@ const DetailProduct = () => {
       productId: productDetail.id,
       productName: productDetail.name,
       color: colorType,
-      quantity: 1,
+      quantity: quantity,
       internalMemory: variant.internalMemory,
       price: variant.price,
     });
-    setQuantity(1);
   };
 
   const handleSpecificationClick = (specification) => {
@@ -58,7 +57,7 @@ const DetailProduct = () => {
       productId: productDetail.id,
       productName: productDetail.name,
       color: specification.colorVariant?.[0]?.color,
-      quantity: 1,
+      quantity: quantity,
       internalMemory: specification.internalMemory,
       price: specification.price,
     });
@@ -77,7 +76,7 @@ const DetailProduct = () => {
           productId: data.id,
           productName: data.name,
           color: data.specifications?.[0]?.colorVariant?.[0]?.color,
-          quantity: 1,
+          quantity: quantity,
           internalMemory: data.specifications?.[0]?.internalMemory,
           price: data.specifications?.[0]?.price,
         })
@@ -119,7 +118,7 @@ const DetailProduct = () => {
       if (response.status === 200) {
         console.log("Product added to cart successfully!");
         // Reset quantity sau khi thêm vào giỏ hàng
-        setQuantity(0);
+        setQuantity(1);
         await Swal.fire({
           title: "Thông báo",
           text: "Thêm vào giỏ hàng thành công!",
