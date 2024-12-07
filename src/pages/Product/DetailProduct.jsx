@@ -42,6 +42,8 @@ const DetailProduct = () => {
       internalMemory: variant.internalMemory,
       price: variant.price,
     });
+    console.log("selectedProduct", selectedProduct);
+    
   };
 
   const handleSpecificationClick = (specification) => {
@@ -61,6 +63,8 @@ const DetailProduct = () => {
       internalMemory: specification.internalMemory,
       price: specification.price,
     });
+    console.log("selectedProduct", selectedProduct);
+
   };
 
   const getDetail = async (id) => {
@@ -79,7 +83,9 @@ const DetailProduct = () => {
           quantity: quantity,
           internalMemory: data.specifications?.[0]?.internalMemory,
           price: data.specifications?.[0]?.price,
-        })
+        });
+    console.log("selectedProduct", selectedProduct);
+
       });
     } catch (error) {
       console.log(error);

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import API_URL from "../../config/Api";
 // import { Button, Modal } from 'bootstrap';
+// import { index } from 'dom7';
 
 function Cart() {
   const navigate = useNavigate();
@@ -174,11 +175,11 @@ function Cart() {
     // Thực hiện chuyển hướng đến trang "/tien-hanh-dat-hang"
     navigate("./../tien-hanh-dat-hang");
   };
-  const itemCart = carts.map((item) => {
+  const itemCart = carts.map((item, idx) => {
     return (
       <tr key={item.id}>
         <th className="p-3 align-middle border-light">
-          <p className="mb-0 small">{item.quantity}</p>
+          <p className="mb-0 small">{idx+1}</p>
         </th>
         <th className="ps-0 py-3 border-light" scope="row">
           <div className="d-flex align-items-center">
@@ -195,7 +196,7 @@ function Cart() {
         <td className="p-3 align-middle border-light">
           <div className="mb-0">
             <p className="fw-bold text-secondary p-0 m-0">
-              {item.price} VND
+              {item.price?.toLocaleString()} VND
               <span className="text-small"></span>
             </p>
           </div>
@@ -226,7 +227,7 @@ function Cart() {
         </td>
         <td className="p-3 align-middle border-light">
           <p className="mb-0 small">
-            {Math.floor(item.price * item.quantity)} VND
+            {Math.floor(item.price * item.quantity).toLocaleString()} VND
           </p>
         </td>
         <td className="p-3 align-middle border-light">
@@ -377,7 +378,7 @@ function Cart() {
                         Tạm tính
                       </strong>
                       <span className="text-muted small">
-                        {totalCartPrice} VND
+                        {totalCartPrice.toLocaleString()} VND
                       </span>
                     </li>
                     <li className="border-bottom my-2"></li>
@@ -385,7 +386,7 @@ function Cart() {
                       <strong className="text-uppercase small font-weight-bold">
                         Tổng cộng
                       </strong>
-                      <span>{totalCartPrice} VND</span>
+                      <span>{totalCartPrice.toLocaleString()} VND</span>
                     </li>
                     {countCart > 0 && (
                       <li>
