@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_URL from '../../config/Api';
+import Button from '@mui/material/Button';
+import { useNavigate } from "react-router-dom";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -14,6 +17,7 @@ const Order = () => {
         const response = await axios.post(`${API_URL}/order`, {
           user_id: auth_user.id,
         });
+        console.log(response.data.orders);
         setOrders(response.data.orders);
         setLoading(false);
       } catch (error) {
@@ -37,6 +41,11 @@ const Order = () => {
         return 'bg-gray-200';
     }
   };
+
+  const gotoDetailOrder = (id) => {
+    console.log('gotoDetailOrder', id);
+    navigate(`/lazi-store/chi-tiet-don-hang/${id}`);
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -66,12 +75,12 @@ const Order = () => {
                   {order.status}
                 </td>
                 <td>
-                  <button>
+                  <Button variant="outlined" onClick={() => gotoDetailOrder(order.id)}>
                     Xem chi tiết
-                  </button>
-                  <button>
+                  </Button>
+                  <Button variant="outlined">
                     Thanh toán
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}

@@ -43,7 +43,7 @@ function Header() {
   ];
   const loginSettings = [
     { id: 1, name: "Thông tin khách hàng", link: "/thong-tin-khach-hang.html" },
-    { id: 2, name: "Lịch sử đặt hàng", link: "/lich-su" },
+    { id: 2, name: "Đơn hàng", link: "/don-hang" },
     { id: 3, name: "Quá trình giao hàng", link: "/gia-hang.html" },
     { id: 4, name: "Đăng xuất", link: "/", logout: true },
   ];

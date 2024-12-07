@@ -18,6 +18,7 @@ import DetailUser from "./pages/User/DetailUser";
 import OrderUser from "./pages/User/OrderUser";
 import CheckPayment from "./pages/checkpayment/payment";
 import Order from "./pages/Orders/Order";
+import DetailOrder from "./pages/Orders/DetailOrder";
 import ChatBot from "./pages/ChatBot/ChatBot";
 'use client'
 
@@ -41,7 +42,8 @@ import ChatBot from "./pages/ChatBot/ChatBot";
               <Route path="*" element={<Page403 />} />
               <Route path={URL_PATH.concat("/tien-hanh-dat-hang")} element={<AuthRoute element={Checkout} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
               <Route path={URL_PATH.concat("/gio-hang")} element={<AuthRoute element={Cart} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
-              <Route path={URL_PATH.concat("/lich-su")} element={<AuthRoute element={Order} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
+              <Route path={URL_PATH.concat("/don-hang")} element={<AuthRoute element={Order} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
+              <Route path={URL_PATH.concat("/chi-tiet-don-hang/:id")} element={<AuthRoute element={DetailOrder} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
               <Route path={URL_PATH.concat("/thong-tin-khach-hang.html")} element={<AuthRoute element={DetailUser} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
               <Route path={URL_PATH.concat("/dang-nhap")} element={<AuthRoute element={Login} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
               <Route path={URL_PATH.concat("/dang-ky")} element={<AuthRoute element={Register} isAuthenticated={!isAuthenticated} redirectPath={URL_PATH} />}/>
