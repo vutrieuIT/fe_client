@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API_URL from "../../config/Api";
 import axios from "axios";
+import Swal from "sweetalert2";
 // import { Dropdown } from "react-bootstrap";
 
 const Checkout = () => {
@@ -13,6 +14,9 @@ const Checkout = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
+  const [discountCode, setDiscountCode] = useState("");
+  const [discount, setDiscount] = useState({});
+  const [discountValue, setDiscountValue] = useState(0);
 
   const [provinceList, setProvinceList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
@@ -40,7 +44,7 @@ const Checkout = () => {
     // Gọi hàm để lấy carts của user khi component được render
     getCartsByUser();
     console.log(carts);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Dependency array rỗng đảm bảo hàm chỉ được gọi một lần khi component mount
 
   const userInfos = sessionStorage.getItem("userInfo");
@@ -50,7 +54,7 @@ const Checkout = () => {
     headers: {
       Authorization: `Bearer ${auth_user.token}`,
     },
-  }
+  };
 
   const getCartsByUser = async () => {
     try {
@@ -106,6 +110,7 @@ const Checkout = () => {
         full_name: fullName, // Lấy tên người dùng từ input
         phone_number: phoneNumber, // Lấy số điện thoại từ input
         address: address, // Lấy địa chỉ từ input
+        discountCode: discount.code,
         // Các thuộc tính khác nếu cần
       };
 
@@ -181,6 +186,28 @@ const Checkout = () => {
   const handleWardChange = (e) => {
     const selectedName = e.target.options[e.target.selectedIndex].text;
     setWard(selectedName);
+  };
+
+  const onBlurDiscountCode = async () => {
+    await axios
+      .get(`${API_URL}/discount/${discountCode}`)
+      .then((res) => {
+        setDiscount(res.data);
+        if (res.data.discountType === "amount") {
+          setDiscountValue(res.data.discount);
+          console.log(discountValue);
+        } else {
+          setDiscountValue((totalCartPrice * res.data.discount) / 100);
+        }
+      })
+      .catch((err) => {
+        Swal.fire({
+          title: JSON.stringify(err.response.data),
+          icon: "error",
+        });
+        setDiscountValue(0);
+        setDiscount({});
+      });
   };
 
   return (
@@ -274,6 +301,25 @@ const Checkout = () => {
                       placeholder="e.g. +02 245354745"
                       value={phoneNumber}
                       onChange={handlePhoneNumberChange}
+                    />
+                  </div>
+                  <div className="col-lg-6">
+                    <label
+                      className="form-label text-sm text-uppercase"
+                      htmlFor="discountCode"
+                    >
+                      Mã giảm giá{" "}
+                    </label>
+                    <input
+                      className="form-control form-control-lg"
+                      autoComplete="discountCode"
+                      type="tel"
+                      id="discountCode"
+                      name="discountCode"
+                      placeholder=""
+                      value={discountCode}
+                      onChange={(e) => setDiscountCode(e.target.value)}
+                      onBlur={onBlurDiscountCode}
                     />
                   </div>
                   <div className="col-lg-12">
@@ -373,7 +419,7 @@ const Checkout = () => {
               <div className="card border-0 rounded-0 p-lg-4 bg-light">
                 <div className="card-body">
                   <h5 className="text-uppercase mb-4">
-                    Đơn hàng của bạn gồm <span>(5)</span>
+                    Đơn hàng của bạn gồm <span>{carts.length} sản phẩm</span>
                   </h5>
                   <ul className="list-unstyled mb-0">
                     {/* Duyệt qua từng mục trong mảng carts */}
@@ -386,26 +432,36 @@ const Checkout = () => {
                         >
                           {/* Hiển thị tên sản phẩm và màu sắc biến thể */}
                           <strong className="small fw-bold">
-                            {cartItem.productName} - {cartItem.color}{" "} - {cartItem.internalMemory}GB
-                            x {cartItem.quantity}{" "}
+                            {cartItem.productName} - {cartItem.color} -{" "}
+                            {cartItem.internalMemory}GB x {cartItem.quantity}{" "}
                           </strong>
                           {/* Hiển thị giá sản phẩm */}
                           <span className="text-muted small">
-                            $
                             {Math.floor(
                               cartItem.quantity * parseFloat(cartItem.price)
-                            )}
+                            ).toLocaleString()}{" "}
+                            vnd
                           </span>
                         </li>
                       ))}
                     {/* Tạo đường gạch ngang */}
                     <li className="border-bottom my-2"></li>
                     {/* Hiển thị tổng tiền */}
+                    {discountValue > 0 && (
+                      <li className="d-flex align-items-center justify-content-between">
+                        <strong className="text-uppercase small fw-bold">
+                          Khuyến mãi
+                        </strong>
+                        <span>{discountValue.toLocaleString()} vnd</span>
+                      </li>
+                    )}
                     <li className="d-flex align-items-center justify-content-between">
                       <strong className="text-uppercase small fw-bold">
-                        Total
+                        Tổng cộng
                       </strong>
-                      <span>${totalCartPrice}</span>
+                      <span>
+                        {(totalCartPrice - discountValue).toLocaleString()} vnd
+                      </span>
                     </li>
                   </ul>
                 </div>

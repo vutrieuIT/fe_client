@@ -87,6 +87,7 @@ const Order = () => {
                 Thời gian tạo
               </th>
               <th className="border border-gray-300 px-4 py-2">Trạng thái</th>
+              <th className="border border-gray-300 px-4 py-2">Thanh toán</th>
               <th className="border border-gray-300 px-4 py-2"></th>
             </tr>
           </thead>
@@ -109,6 +110,9 @@ const Order = () => {
                   )}`}
                 >
                   {order.status}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {order.paymentStatus}
                 </td>
                 <td>
                   <Button
