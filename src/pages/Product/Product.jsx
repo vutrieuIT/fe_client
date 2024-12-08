@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import API_URL from "../../config/Api";
+import API_URL, { HOST } from "../../config/Api";
 import styles from "./styles.module.css";
 import Loading from "../../components/Loading";
+import { useDispatch } from "react-redux";
+import cartSlice from "../../state/cartSlice";
+import URL_PATH from "../../config/UrlPath";
 
 function Product() {
   const [products, setProducts] = useState([]);
@@ -11,6 +14,9 @@ function Product() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const hasLogin = sessionStorage.getItem("hasLogin");
+
+  const dispatch = useDispatch();
+  const { add } = cartSlice.actions;
 
   const fetchDataCategory = async () => {
     try {
@@ -102,21 +108,6 @@ function Product() {
       fetchDataCategory();
     }
   }, [loading]);
-  // const category = categories.map((category) => {
-  //   return (
-  //     <div
-  //       key={category.id}
-  //       className="col-sm-12 col-xl-1 mb-2"
-  //       style={{ width: 260, minHeight: 52, maxHeight: 60 }}
-  //     >
-  //       <a href={category.slug}>
-  //         <button className="text-start rounded-3 btn btn-light w-100 h-100">
-  //           <p className="m-1 overflow-hidden">{category.name}</p>
-  //         </button>
-  //       </a>
-  //     </div>
-  //   );
-  // });
   const queryParameters = new URLSearchParams(window.location.search);
   let search = queryParameters.get("search");
 
@@ -130,95 +121,67 @@ function Product() {
         return null;
       }
 
-      const price = product.variations.map((variation, index) => {
-        if (index === 0) {
-          return (
-            <div key={variation.id} className="text-danger text-center">
-              <p className="fw-bold m-1">
-                {parseInt(variation.price_sale)
-                  .toFixed(2)
-                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                <span className="text-small">đ</span>
-              </p>
-              <p className="m-1 text-secondary fw-bold text-decoration-line-through">
-                {parseInt(variation.price)
-                  .toFixed(2)
-                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
-                <span className="text-small">đ</span>
-              </p>
-            </div>
-          );
-        }
-      });
-
-      const image = product.variations.map((variation, index) => {
-        if (index === 0) {
-          return (
-            <img
-              key={variation.id}
-              className={`img-fluid ${styles.borderImageProduct}`}
-              loading="lazy"
-              src={variation.image_url}
-              data-src={variation.image_url}
-              alt={variation.image_url}
-            />
-          );
-        }
-      });
-
       return (
-        <div key={product.id} className={`col-lg-4 col-sm-6`}>
-          <div
-            className={`product text-start bg-light  mb-3 ${styles.borderProduct} ${styles.paddingImageProduct}`}
-          >
-            <div className="position-relative mb-3">
-              <div className="badge text-white bg-danger">Hot</div>
-              <a className="d-block" to={product.slug}>
-                {image}
-              </a>
-              <div className="product-overlay">
-                <ul className="mb-0 list-inline">
-                  {!hasLogin ? (
-                    <li className="list-inline-item m-0 p-0">
-                      <a
-                        className="btn btn-sm btn-dark"
-                        href={"dang-nhap.html"}
-                      >
-                        <i className="fa fa-cart-plus"></i> Thêm vào giỏ
-                      </a>
-                    </li>
-                  ) : (
-                    <li className="list-inline-item m-0 p-0">
-                      <a
-                        className="btn btn-sm btn-dark"
-                        href={"cua-hang/" + product.slug + ".html"}
-                      >
-                        <i className="fa fa-cart-plus"></i> Thêm vào giỏ{" "}
-                      </a>
-                    </li>
-                  )}
-                </ul>
-              </div>
+      <div key={product.id} className="col-xl-3 col-lg-4 col-sm-6">
+        <div
+          className={`product text-start bg-light mb-3 ${styles.borderProduct} ${styles.paddingImageProduct}`}
+        >
+          <div className="position-relative mb-3">
+            <div className="badge">{product.status} logic</div>
+            <Link className="d-block" to={`./${product.id}`}>
+              <img
+                className={`img-fluid ${styles.borderImageProduct}`}
+                src={`${HOST.concat(product.variants[0].images[0])}`}
+                alt={product.name}
+              />
+            </Link>
+            <div className="product-overlay">
+              <ul className="mb-0 list-inline">
+                {!hasLogin ? (
+                  <li className="list-inline-item m-0 p-0">
+                    <a className="btn btn-sm btn-dark" href={"dang-nhap.html"}>
+                      <i className="fa fa-cart-plus"></i> Thêm vào giỏ
+                    </a>
+                  </li>
+                ) : (
+                  <li className="list-inline-item m-0 p-0">
+                    <button
+                      className="btn btn-sm btn-dark"
+                      onClick={() => {
+                        dispatch(add({ ...product, quantity: 1 }));
+                      }}
+                    >
+                      <i className="fa fa-cart-plus"></i> Thêm vào giỏ{" "}
+                    </button>
+                  </li>
+                )}
+              </ul>
             </div>
-            <h6 className="text-center">
-              {" "}
-              <Link className="reset-anchor" to={product.slug + ".html"}>
-                Iphone
-              </Link>
-            </h6>
-            <h6 className="text-center">
-              {" "}
-              <Link
-                className="reset-anchor text-center"
-                to={product.slug + ".html"}
-              >
-                {product.name}
-              </Link>
-            </h6>
-            {price}
           </div>
+          <h6 className="text-center">
+            {" "}
+            <Link
+              className="reset-anchor"
+              to={`/${URL_PATH}/cua-hang/${product.id}`}
+            >
+              {product.type}
+            </Link>
+          </h6>
+          <h6 className="text-center">
+            {" "}
+            <Link
+              className="reset-anchor"
+              to={`/${URL_PATH}/cua-hang/${product.id}`}
+            >
+              {product.name}
+            </Link>
+          </h6>
+          <p className="text-center mb-1 small text-black">
+            {product.specifications[0].price.toLocaleString()} VNĐ
+          </p>
         </div>
-      );
+      </div>
+    );
     })
     .filter((product) => product !== null); // Loại bỏ các sản phẩm không phù hợp với điều kiện
 
