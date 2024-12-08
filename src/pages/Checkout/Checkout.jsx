@@ -25,6 +25,7 @@ const Checkout = () => {
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [ward, setWard] = useState("");
+  const [addressCode, setAddressCode] = useState([]);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -110,6 +111,7 @@ const Checkout = () => {
         full_name: fullName, // Lấy tên người dùng từ input
         phone_number: phoneNumber, // Lấy số điện thoại từ input
         address: address, // Lấy địa chỉ từ input
+        addressCode: addressCode,
         discountCode: discount.code,
         // Các thuộc tính khác nếu cần
       };
@@ -165,14 +167,16 @@ const Checkout = () => {
         );
       });
     });
-    const selectedName = e.target.options[e.target.selectedIndex].text;
+    const selectedName = e.target.options[e.target.selectedIndex].text;  
     setProvince(selectedName);
+    addressCode[2] = e.target.value;
   };
 
   // lấy đơn vị hành chính cấp xã
   const handleDistrictChange = (e) => {
     axios.get(API_URL + `/ghn/ward/${e.target.value}`).then((res) => {
       setWardList(res.data.data);
+      
       // sort theo tên xã
       setWardList((prev) => {
         return prev.sort((a, b) => a.WardName.localeCompare(b.WardName, "vi"));
@@ -180,12 +184,16 @@ const Checkout = () => {
     });
     const selectedName = e.target.options[e.target.selectedIndex].text;
     setDistrict(selectedName);
+    addressCode[1] = e.target.value
   };
 
   // set đơn vị hành chính cấp xã
   const handleWardChange = (e) => {
     const selectedName = e.target.options[e.target.selectedIndex].text;
+    console.log(e.target.options[e.target.selectedIndex]);
+    
     setWard(selectedName);
+    addressCode[0] = e.target.value;
   };
 
   const onBlurDiscountCode = async () => {
@@ -384,7 +392,7 @@ const Checkout = () => {
                     >
                       <option value="">Chọn phường/xã</option>
                       {wardList.map((ward, index) => (
-                        <option key={index} value={ward.WardID}>
+                        <option key={index} value={ward.WardCode}>
                           {ward.WardName}
                         </option>
                       ))}
