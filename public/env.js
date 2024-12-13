@@ -1,3 +1,2 @@
 // public/env.js
-// window.__API_URL__ = 'http://localhost:8001/api';  
-window.__API_URL__ = 'http://localhost:8001/api/mongo';
+window.__API_URL__ = 'http://localhost:8001/api';
