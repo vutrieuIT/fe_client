@@ -324,7 +324,7 @@ function Cart() {
                             Không có sản phẩm nào trong giỏ hàng{" "}
                             <span>
                               <a
-                                href={"/" + URL_PATH}
+                                href={"/" + URL_PATH + "/"}
                                 className="text-decoration-underline"
                               >
                                 trở lại mua hàng

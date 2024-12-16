@@ -31,6 +31,9 @@ const DetailProduct = () => {
   const [comments, setComments] = useState([]);
 
   const handleColorClick = (colorType, variant) => {
+    console.log("colorType", colorType);
+    console.log("variant", variant);
+    console.log("selectedSpecification", selectedSpecification);
     setSelectedColor(colorType);
     variantImageRender(colorType)?.[0] &&
       setSelectedImage(variantImageRender(colorType)?.[0]);
@@ -39,8 +42,8 @@ const DetailProduct = () => {
       productName: productDetail.name,
       color: colorType,
       quantity: quantity,
-      internalMemory: variant.internalMemory,
-      price: variant.price,
+      internalMemory: selectedSpecification.internalMemory,
+      price: selectedSpecification.price,
     });
     console.log("selectedProduct", selectedProduct);
     
